@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.sessions.models import Session
 from datetime import datetime
 from django.utils.timezone import now
+import re
 
 
 from .models import User, Listing, Bidding, Watchlist, Closebid, Comment, Category
@@ -367,6 +368,12 @@ def register(request):
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
+
+        # Ensure email has correct domain
+        if not re.match(r"[^@]+@soulisto\.com\.br$", email):
+            return render(request, "auctions/register.html", {
+                "message": "Please enter a valid email with the @soulisto.com.br domain."
+            })
 
         # Ensure password matches confirmation
         password = request.POST["password"]
