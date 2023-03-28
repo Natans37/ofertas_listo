@@ -2,3 +2,5 @@ auctions/__pycache__
 auctions/migrations/__pycache__
 commerce/__pycache__
 venv_bids/
+auctions/templates/auctions/listing.html
+db.sqlite3
