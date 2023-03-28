@@ -177,6 +177,7 @@ def bid(request, listingid):
                 if  Bidding.objects.filter(id=listingid):
                     bidrow = Bidding.objects.filter(id=listingid)
                     bidrow.delete()
+                    fs.time = now
                 fs = bidform.save(commit=False)
                 fs.bidder = request.user.username
                 fs.listingid = listingid
@@ -187,11 +188,11 @@ def bid(request, listingid):
                 fs.listingid = listingid
                 fs.save()   
             response = redirect('listingpage', id=listingid)
-            response.set_cookie('success','Successful Bid! Your bid is currently the highest bid.', max_age=1)
+            response.set_cookie('success','Lance efetuado com sucesso!.', max_age=1)
             return response
         else:
             response = redirect('listingpage', id=listingid)
-            response.set_cookie('error','Your bid must be higher than the current price!', max_age=1)
+            response.set_cookie('error','Você deve fornecer um valor maior que o preço atual', max_age=1)
             return response
     else:
         return redirect('index')
