@@ -1,276 +1,251 @@
 {% extends "auctions/layout.html" %}
 {% load crispy_forms_tags %}
 {% block body %}
-{% load static %} 
+{% load static %}
+
 <body onload="countdown()">
-<div class="container" style="margin: 100px auto">
+  <div class="container" style="margin: 100px auto">
 
-    <div class="row"> 
+    <div class="row">
 
-    <!-- LEFT COLUMN - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-        <div class="col-md-7">
+      <!-- LEFT COLUMN - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+      <div class="col-md-7">
 
         <!-- IMAGE OF ITEM -->
 
-              {% if object.images %}
-                    <img class="img-fluid rounded mb-3 mb-md-0" src="{{ object.images }}" style="width:80%;margin:50px;border:10px" class="ml-lg-5 order-1 order-lg-2" alt="No Image Available for {{ object.productnames}}">
-              {% else %}
-                    <img class="img-fluid rounded mb-3 mb-md-0" src="https://i.ibb.co/T8nxLQT/No-Image-Available.png" style="width:80%;margin:50px;border:10px" alt="No-Image-Available"> 
-              {% endif %}
-              <br/><br/><br/>
+        {% if object.images %}
+        <img class="img-fluid rounded mb-3 mb-md-0" src="{{ object.images }}" style="width:80%;margin:50px;border:10px"
+          class="ml-lg-5 order-1 order-lg-2" alt="No Image Available for {{ object.productnames}}">
+        {% else %}
+        <img class="img-fluid rounded mb-3 mb-md-0" src="https://raw.githubusercontent.com/Natans37/e-commerce-website/254db792501b2711e2f183fbc5092b12d1eadac6/auctions/static/img/Post_para_Instagram_Promo%C3%A7%C3%A3o_de_Aparelhos_Neon__Post_para_Facebook__Paisagem____2_-removebg-preview.png"
+          style="width:80%;margin:50px;border:10px" alt="No-Image-Available">
+        {% endif %}
+        <br /><br /><br />
         <div class="comment-box">
-        <div class="container desc">
-          <div class="row" >
-            <div class="col-11">
-              <dt class="col-sm-4 mb-3 d-block text-muted">Description:</dt>
-                  <dd class="col-sm-12" style="word-wrap: break-word; margin: 20px;"> {{ object.descriptions }} </dd>
+          <div class="container desc">
+            <div class="row">
+              <div class="col-11">
+                <dt class="col-sm-4 mb-3 d-block text-muted">Description:</dt>
+                <dd class="col-sm-12" style="word-wrap: break-word; margin: 20px;"> {{ object.descriptions }} </dd>
+              </div>
             </div>
           </div>
         </div>
-        </div>
 
         <!-- COMMENT SECTION -->
-          <div class="container">
-            <div class="row">
-              <div class="col-11">
-                <div class="comments">
+        <div class="container">
+          <div class="row">
+            <div class="col-11">
+              <div class="comments">
 
-              <!-- ADD COMMENTS -->
+                <!-- ADD COMMENTS -->
 
-              {% if user.username %}
-                  <div class="comment-box add-comment">
-                    <span class="commenter-pic">
-                      <img src="https://icon-library.net/images/anonymous-avatar-icon/anonymous-avatar-icon-2.jpg" class="img-fluid">
-                    </span>
-                    <span class="commenter-name">
-                      <form action="{% url 'comment' object.id %}" method="post">
+                {% if user.username %}
+                <div class="comment-box add-comment">
+                  <span class="commenter-pic">
+                    <img src="https://icon-library.net/images/anonymous-avatar-icon/anonymous-avatar-icon-2.jpg"
+                      class="img-fluid">
+                  </span>
+                  <span class="commenter-name">
+                    <form action="{% url 'comment' object.id %}" method="post">
                       {% csrf_token %}
                       {{ cform.comment|as_crispy_field }}
                       <button type="submit" class="btn btn-default">Comment</button>
-                      </form>
-                    </span>
-                  </div>
-              {% else %}
-                  
-              {% endif %}
+                    </form>
+                  </span>
+                </div>
+                {% else %}
 
-              
+                {% endif %}
+
+
                 <!-- TOGGLE TO HIDE/SHOW COMMENTS -->
                 <p>
-                  <a data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1"> 
-                  <div class="comments-details">
-                    <span class="total-comments comments-sort"> {{ ccount }}&nbsp; Comments</span>     
-                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-caret-up-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                    </svg>
-                  </div>
+                  <a data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false"
+                    aria-controls="multiCollapseExample1">
+                    <div class="comments-details">
+                      <span class="total-comments comments-sort"> {{ ccount }}&nbsp; Comments</span>
+                      <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-caret-up-fill" fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
+                      </svg>
+                    </div>
                   </a>
-                </a>
+                  </a>
                 </p>
 
                 <!-- LOOP TO SHOW ALL COMMENTS -->
                 <div class="panel-collapse collapse show" id="multiCollapseExample1">
                   {% for obj in comment reversed %}
-                    <div class="comment-box">
-                      <span class="commenter-pic">
-                        <img src="https://icon-library.net/images/anonymous-avatar-icon/anonymous-avatar-icon-2.jpg" class="img-fluid">
-                      </span>
-                      <span class="commenter-name">
-                        <strong> {{ obj.user }} </strong> <span class="comment-time"> {{ obj.time }} </span>
-                      </span>       
-                      <p class="comment-txt more"> {{ obj.comment }} </p>              
-                    </div>
+                  <div class="comment-box">
+                    <span class="commenter-pic">
+                      <img src="https://icon-library.net/images/anonymous-avatar-icon/anonymous-avatar-icon-2.jpg"
+                        class="img-fluid">
+                    </span>
+                    <span class="commenter-name">
+                      <strong> {{ obj.user }} </strong> <span class="comment-time"> {{ obj.time }} </span>
+                    </span>
+                    <p class="comment-txt more"> {{ obj.comment }} </p>
+                  </div>
                   {% endfor %}
                 </div>
 
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- RIGHT COLUMN - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-        <div class="col-md-5">
-            <h1 style="margin-bottom: 30px; word-wrap: break-word;">{{ object.productnames }}</h1>
+      <!-- RIGHT COLUMN - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+      <div class="col-md-5">
+        <h1 style="margin-bottom: 30px; word-wrap: break-word;">{{ object.productnames }}</h1>
 
         <!-- PRODUCT DETAILS -->
-              <dl class="row">
-                  
+        <dl class="row">
 
-                  <dt class="col-sm-4 mb-3 d-block text-muted">Current Price:</dt>
-                  <dd class="col-sm-8"> <strong>${{ object.startingbids }}</strong> </dd>
-                          
-                  <dt class="col-sm-4 mb-3 d-block text-muted">Number of Bids:</dt>
-                  {% if bidcount is 0 %} <dd class="col-sm-8"> No bids yet </dd>
-                  {% else %} <dd class="col-sm-8"> {{ bidcount }} </dd> {% endif %}
 
-                  <dt class="col-sm-4 mb-3 d-block text-muted">Category:</dt>
-                  <dd class="col-sm-8"> {{ object.category }} </dd>
+          <dt class="col-sm-4 mb-3 d-block text-muted">Preço atual:</dt>
+          <dd class="col-sm-8"> <strong>R$ {{ object.startingbids }}</strong> </dd>
 
-                  <dt class="col-sm-4 mb-3 d-block text-muted">Listed by:</dt>
-                  <dd class="col-sm-8"> {{ object.lister }} </dd>
+          <dt class="col-sm-4 mb-3 d-block text-muted">Número de lances:</dt>
+          {% if bidcount is 0 %} <dd class="col-sm-8"> Sem lances ainda </dd>
+          {% else %} <dd class="col-sm-8"> {{ bidcount }} </dd> {% endif %}
 
-                  <dt class="col-sm-4 mb-3 d-block text-muted">Date Posted:</dt>
-                  <dd class="col-sm-8"> {{ object.created }} </dd>
-                  
-                  <dt class="col-sm-4 mb-3 d-block text-muted">End time:</dt>
-                  <dd class="col-sm-8"> {{ endtime }} </dd>
+          <dt class="col-sm-4 mb-3 d-block text-muted">Categoria:</dt>
+          <dd class="col-sm-8"> {{ object.category }} </dd>
 
-                  <div id="countdown">
-                    <div>
-                      <span id="days"></span>
-                      <div class="smalltext">Dias</div>
-                    </div>
-                    <div>
-                      <span id="hours"></span>
-                      <div class="smalltext">Horas</div>
-                    </div>
-                    <div>
-                      <span id="minutes"></span>
-                      <div class="smalltext">Minutos</div>
-                    </div>
-                    <div>
-                      <span id="seconds"></span>
-                      <div class="smalltext">Segundos</div>
-                    </div>
-                  </div>
-                
-                  <script>
-                    function countdown() {
-                      var now = new Date();
-                      var eventDate = new Date("2023-12-31"); // data do evento
-                      var currentTime = now.getTime();
-                      var eventTime = eventDate.getTime();
-                
-                      var remTime = eventTime - currentTime;
-                
-                      var s = Math.floor(remTime / 10000);
-                      var m = Math.floor(s / 60);
-                      var h = Math.floor(m / 60);
-                      var d = Math.floor(h / 24);
-                
-                      h %= 24;
-                      m %= 60;
-                      s %= 60;
-                
-                      h = (h < 10) ? "0" + h : h;
-                      m = (m < 10) ? "0" + m : m;
-                      s = (s < 10) ? "0" + s : s;
-                
-                      document.getElementById("days").textContent = d;
-                      document.getElementById("hours").textContent = h;
-                      document.getElementById("minutes").textContent = m;
-                      document.getElementById("seconds").textContent = s;
-                
-                      setTimeout(countdown, 1000);
-                    }
-                
-                  </script>
+          <!--<dt class="col-sm-4 mb-3 d-block text-muted">Listed by:</dt>
+          <dd class="col-sm-8"> {{ object.lister }} </dd> -->
 
-              </dl>
+          <!--<dt class="col-sm-4 mb-3 d-block text-muted">Date Posted:</dt>
+          <dd class="col-sm-8"> {{ object.created }} </dd>!-->
+
+          <dt class="col-sm-4 mb-3 d-block text-muted">Data Final:</dt>
+          <dd class="col-sm-8"> {{ endtime }} </dd>
+
+          <div id="countdown">
+            <div>
+              <span id="days"></span>
+              <div class="smalltext">Dias</div>
+            </div>
+            <div>
+              <span id="hours"></span>
+              <div class="smalltext">Horas</div>
+            </div>
+            <div>
+              <span id="minutes"></span>
+              <div class="smalltext">Minutos</div>
+            </div>
+            <div>
+              <span id="seconds"></span>
+              <div class="smalltext">Segundos</div>
+            </div>
+          </div>
+
+          <script>
+            function countdown() {
+              var now = new Date();
+              var eventDate = new Date("2023-03-28T17:42:00"); // definir data de termino 
+              var currentTime = now.getTime();
+              var eventTime = eventDate.getTime();
+
+              var remTime = eventTime - currentTime
+
+              var s = Math.floor(remTime / 1000);
+              var m = Math.floor(s / 60);
+              var h = Math.floor(m / 60);
+              var d = Math.floor(h / 24);
+
+              h %= 24;
+              m %= 60;
+              s %= 60;
+
+              h = (h < 10) ? "0" + h : h;
+              m = (m < 10) ? "0" + m : m;
+              s = (s < 10) ? "0" + s : s;
+
+              document.getElementById("days").textContent = d;
+              document.getElementById("hours").textContent = h;
+              document.getElementById("minutes").textContent = m;
+              document.getElementById("seconds").textContent = s;
+
+              setTimeout(countdown, 1000);
+
+              var intervalId = setInterval(checkCountdown, 1000);
+
+
+
+            }
+
+          </script>
+
+        </dl>
 
         <!-- ERROR ALERT -->
-            {% if error %}
-             <br />
-                <center class="alert alert-danger" style="margin-bottom:10px; height:30px; line-height:30px; padding:0px 15px;" role="alert">
-                    {{error}}
-                </center>
-            {% endif %}
-            {% if success %}
-             <br />
-                <center class="alert alert-success" style="margin-bottom:10px; height:30px; line-height:30px; padding:0px 15px;" role="alert">
-                    {{success}}
-                </center>
-            {% endif %} 
+        {% if error %}
+        <br />
+        <center class="alert alert-danger" style="margin-bottom:10px; height:30px; line-height:30px; padding:0px 15px;"
+          role="alert">
+          {{error}}
+        </center>
+        {% endif %}
+        {% if success %}
+        <br />
+        <center class="alert alert-success" style="margin-bottom:10px; height:30px; line-height:30px; padding:0px 15px;"
+          role="alert">
+          {{success}}
+        </center>
+        {% endif %}
 
         <!-- SUBMIT BID FORM -->
-            {% if user.username %}
-              <form action="{% url 'bid' object.id %}" method="post">
-                  <div>
-                      {% csrf_token %}
-                      {{ bidform.bidprice|as_crispy_field }}
-                      <button class="btn btn-lg btn-warning btn-block text-uppercase" style="font-size: 80%; border-radius: 5rem; letter-spacing: .1rem; font-weight: bold;padding: 1rem;transition: all 0.2s;">
-                              Submit a Bid</button>
-                  </div>
-              </form>
-            {% else %}
-                      <a href="{% url 'register'%}">
-                      <button class="btn btn-lg btn-warning btn-block text-uppercase" style="font-size: 80%; border-radius: 5rem; letter-spacing: .1rem; font-weight: bold;padding: 1rem;transition: all 0.2s;">
-                              Register now! </button>
-                      </a>
-            {% endif %}   
+        {% if user.username %}
+        <form action="{% url 'bid' object.id %}" method="post">
+          <div>
+            {% csrf_token %}
+            {{ bidform.bidprice|as_crispy_field }}
+            <button class="btn btn-lg btn-warning btn-block text-uppercase" style="font-size: 80%; border-radius: 5rem; letter-spacing: .1rem; font-weight: bold;padding: 1rem;transition: all 0.2s;">
+              Dar lance</button>
+          </div>
+        </form>
+        {% else %}
+        <a href="{% url 'login'%}">
+          <button class="btn btn-lg btn-warning btn-block text-uppercase"
+            style="font-size: 80%; border-radius: 5rem; letter-spacing: .1rem; font-weight: bold;padding: 1rem;transition: all 0.2s;">
+            Entre  para participar! </button>
+        </a>
+        {% endif %}
 
-      <!-- WATCHLIST -->
-          <br />
-              {% if user.username %}
-              {% if added%}
-                <a href="{% url 'removewatch' object.id %}"><button class="btn btn-danger btn-lg btn-primary btn-block text-uppercase" style="#51624F; font-size: 80%; border-radius: 5rem; letter-spacing: .1rem; font-weight: bold;padding: 1rem;transition: all 0.2s;">
-                          Remove from watchlist</button></a>
-              {% else %}
-                <a href="{% url 'addwatch' object.id %}"><button class="btn btn-success btn-lg btn-primary btn-block text-uppercase" style="font-size: 80%; border-radius: 5rem; letter-spacing: .1rem; font-weight: bold;padding: 1rem;transition: all 0.2s;">
-                          Add to watchlist</button></a>
-              {% endif %}
-              {% endif %} 
-      
-      <!-- CLOSE BID-->
-          <br />
-              {% if user.username %}
-                {% if lister %}
-                    <a href="{% url 'closebid' object.id %}"><button class="btn btn-primary btn-lg btn-primary btn-block text-uppercase" style="color: white; font-size: 80%; border-radius: 5rem; letter-spacing: .1rem; font-weight: bold;padding: 1rem;transition: all 0.2s;">
-                        Close Bid</button></a>
-                {% endif %}
-              {% endif %}
-        </div>
+        <!-- WATCHLIST -->
+        <br />
+        {% if user.username %}
+        {% if added%}
+        <a href="{% url 'removewatch' object.id %}"><button
+            class="btn btn-danger btn-lg btn-primary btn-block text-uppercase"
+            style="#51624F; font-size: 80%; border-radius: 5rem; letter-spacing: .1rem; font-weight: bold;padding: 1rem;transition: all 0.2s;">
+            Remover da minha lista</button></a>
+        {% else %}
+        <a href="{% url 'addwatch' object.id %}"><button
+            class="btn btn-success btn-lg btn-primary btn-block text-uppercase"
+            style="font-size: 80%; border-radius: 5rem; letter-spacing: .1rem; font-weight: bold;padding: 1rem;transition: all 0.2s;">
+            Adicionar a minha lista</button></a>
+        {% endif %}
+        {% endif %}
+
+        <!-- CLOSE BID-->
+        <br />
+        {% if user.username %}
+        {% if lister %}
+        <a href="{% url 'closebid' object.id %}"><button
+            class="btn btn-primary btn-lg btn-primary btn-block text-uppercase" id="close-bid-button" onclick="closeBid()"
+            style="color: white; font-size: 80%; border-radius: 5rem; letter-spacing: .1rem; font-weight: bold;padding: 1rem;transition: all 0.2s;">
+            Finalizar produto</button></a>
+        {% endif %}
+        {% endif %}
       </div>
-</div>  
+    </div>
+  </div>
 
-<div id="countdown-timer"></div>
-
-<script>
-  $(document).ready(function() {
-      // Define a data de término do leilão (no formato yyyy-mm-ddThh:mm:ssZ)
-      var endtime = 2023-05-02;
-      
-      // Converte a data de término para um objeto Date do JavaScript
-      var endtime_date = new Date(endtime);
-      
-      // Define uma função para atualizar o cronômetro a cada segundo
-      function updateTimer() {
-          // Calcula a diferença entre a data de término e a data/hora atual
-          var now = new Date();
-          var time_remaining = endtime_date - now;
-          
-          // Se o tempo restante for menor ou igual a zero, o leilão acabou
-          if (time_remaining <= 0) {
-              $('#countdown-timer').html('<p>O leilão acabou!</p>');
-              clearInterval(timer);
-          }
-          else {
-              // Calcula os dias, horas, minutos e segundos restantes
-              var days_remaining = Math.floor(time_remaining / (1000 * 60 * 60 * 24));
-              var hours_remaining = Math.floor((time_remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-              var minutes_remaining = Math.floor((time_remaining % (1000 * 60 * 60)) / (1000 * 60));
-              var seconds_remaining = Math.floor((time_remaining % (1000 * 60)) / 1000);
-              
-              // Formata a saída do cronômetro (opcional)
-              var output = '';
-              if (days_remaining > 0) {
-                  output += days_remaining + 'd ';
-              }
-              output += hours_remaining + 'h ';
-              output += minutes_remaining + 'm ';
-              output += seconds_remaining + 's';
-              
-              // Exibe o cronômetro na tela
-              $('#countdown-timer').html('<p>' + output + '</p>');
-          }
-      }
-      
-      // Chama a função de atualização do cronômetro a cada segundo
-      var timer = setInterval(updateTimer, 1000);
-  });
-  </script>
-  
 
 </body>
 
