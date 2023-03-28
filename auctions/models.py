@@ -40,7 +40,7 @@ class Bidding(models.Model):
     bidder = models.CharField(max_length=50, blank=True, null=True)
     bidprice = models.DecimalField(max_digits=15, decimal_places=2)
     listingid = models.IntegerField()
-
+    time = models.DateTimeField(default=now, editable=False)
     def __str__(self):
         return f"{self.listingid}"
 
