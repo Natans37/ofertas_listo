@@ -5,7 +5,7 @@
 <!-- HEADER -->
 <header class="bg-secondary text-center py-5 mb-4">
   <div class="container">
-    <h1 class="font-weight-light text-white">WATCHLIST </h1>
+    <h1 class="font-weight-light text-white">Minha Lista </h1>
   </div>
 </header>
 
@@ -14,7 +14,7 @@
   <!-- TOGGLE TO CLOSED BIDS WON -->
   <p><a data-toggle="collapse" href="#collapsewonbid" role="button" aria-expanded="false" aria-controls="collapsewonbid"> 
       <div class="alert alert-danger container" style="margin-top: 5%">
-          <strong> BIDS WON ({{ bidwincount }}) </strong> 
+          <strong> Itens ganhos ({{ bidwincount }}) </strong> 
       </div>
   </a></p>
 
@@ -42,14 +42,14 @@
               {% endif %}  
               <div class="card-body text-center">
                   <a href="{% url 'closed' object.listingid %}">
-                      <h5 class="card-title mb-0"> [CLOSED] {{ object.productnames }} </h5>
+                      <h5 class="card-title mb-0"> [Fechado] {{ object.productnames }} </h5>
                   </a>
               </div>
           </div>
       </div>
 
       {% empty %}
-          <h7 >  You haven't won any bids yet. <a href="{% url 'index' %}"> Start bidding now! </a>  </h7>
+          <h7 >  Você não ganhou nenhum lance. <a href="{% url 'index' %}"> Comece agora! </a>  </h7>
       {% endfor %}
       <!-- LOOP TO SHOW ALL CLOSED ITEMS WON -->
  
@@ -65,7 +65,7 @@
   <p>
     <a data-toggle="collapse" href="#collapsebid" role="button" aria-expanded="false" aria-controls="collapsebid"> 
       <div class="alert alert-success container" >
-      <strong>WATCHLIST</strong>
+      <strong>Minha Lista</strong>
       </div>
     </a>
   </p>
@@ -105,7 +105,7 @@
       {% empty %}
           <center>
               <img style="width: 30%; margin-top: -8% " src="https://i.ibb.co/6vbhKgQ/Pngtree-it-s-in-the-3845898.png" alt="Pngtree-it-s-in-the-3845898" border="0">
-              <h5>  No active listings on your watchlist.  </h5>
+              <h5>  Nenhum item salvo.  </h5>
           </center>
       {% endfor %}
       <!-- END OF LOOP TO SHOW WATCHLIST -->
