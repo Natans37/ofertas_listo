@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 {% block body %}
 {% load static %} 
-
+<body onload="countdown()">
 <div class="container" style="margin: 100px auto">
 
     <div class="row"> 
@@ -112,6 +112,61 @@
 
                   <dt class="col-sm-4 mb-3 d-block text-muted">Date Posted:</dt>
                   <dd class="col-sm-8"> {{ object.created }} </dd>
+                  
+                  <dt class="col-sm-4 mb-3 d-block text-muted">End time:</dt>
+                  <dd class="col-sm-8"> {{ endtime }} </dd>
+
+                  <div id="countdown">
+                    <div>
+                      <span id="days"></span>
+                      <div class="smalltext">Dias</div>
+                    </div>
+                    <div>
+                      <span id="hours"></span>
+                      <div class="smalltext">Horas</div>
+                    </div>
+                    <div>
+                      <span id="minutes"></span>
+                      <div class="smalltext">Minutos</div>
+                    </div>
+                    <div>
+                      <span id="seconds"></span>
+                      <div class="smalltext">Segundos</div>
+                    </div>
+                  </div>
+                
+                  <script>
+                    function countdown() {
+                      var now = new Date();
+                      var eventDate = new Date("2023-12-31"); // data do evento
+                      var currentTime = now.getTime();
+                      var eventTime = eventDate.getTime();
+                
+                      var remTime = eventTime - currentTime;
+                
+                      var s = Math.floor(remTime / 10000);
+                      var m = Math.floor(s / 60);
+                      var h = Math.floor(m / 60);
+                      var d = Math.floor(h / 24);
+                
+                      h %= 24;
+                      m %= 60;
+                      s %= 60;
+                
+                      h = (h < 10) ? "0" + h : h;
+                      m = (m < 10) ? "0" + m : m;
+                      s = (s < 10) ? "0" + s : s;
+                
+                      document.getElementById("days").textContent = d;
+                      document.getElementById("hours").textContent = h;
+                      document.getElementById("minutes").textContent = m;
+                      document.getElementById("seconds").textContent = s;
+                
+                      setTimeout(countdown, 1000);
+                    }
+                
+                  </script>
+
               </dl>
 
         <!-- ERROR ALERT -->
@@ -168,6 +223,56 @@
         </div>
       </div>
 </div>  
+
+<div id="countdown-timer"></div>
+
+<script>
+  $(document).ready(function() {
+      // Define a data de término do leilão (no formato yyyy-mm-ddThh:mm:ssZ)
+      var endtime = 2023-05-02;
+      
+      // Converte a data de término para um objeto Date do JavaScript
+      var endtime_date = new Date(endtime);
+      
+      // Define uma função para atualizar o cronômetro a cada segundo
+      function updateTimer() {
+          // Calcula a diferença entre a data de término e a data/hora atual
+          var now = new Date();
+          var time_remaining = endtime_date - now;
+          
+          // Se o tempo restante for menor ou igual a zero, o leilão acabou
+          if (time_remaining <= 0) {
+              $('#countdown-timer').html('<p>O leilão acabou!</p>');
+              clearInterval(timer);
+          }
+          else {
+              // Calcula os dias, horas, minutos e segundos restantes
+              var days_remaining = Math.floor(time_remaining / (1000 * 60 * 60 * 24));
+              var hours_remaining = Math.floor((time_remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+              var minutes_remaining = Math.floor((time_remaining % (1000 * 60 * 60)) / (1000 * 60));
+              var seconds_remaining = Math.floor((time_remaining % (1000 * 60)) / 1000);
+              
+              // Formata a saída do cronômetro (opcional)
+              var output = '';
+              if (days_remaining > 0) {
+                  output += days_remaining + 'd ';
+              }
+              output += hours_remaining + 'h ';
+              output += minutes_remaining + 'm ';
+              output += seconds_remaining + 's';
+              
+              // Exibe o cronômetro na tela
+              $('#countdown-timer').html('<p>' + output + '</p>');
+          }
+      }
+      
+      // Chama a função de atualização do cronômetro a cada segundo
+      var timer = setInterval(updateTimer, 1000);
+  });
+  </script>
+  
+
+</body>
 
 
 {% endblock %}
