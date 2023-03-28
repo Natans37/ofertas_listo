@@ -22,12 +22,12 @@
             {% if object.bidder == user.username %}
                 <br />
                 <center class="alert alert-success" role="alert" style="margin: 10% auto 5% auto">
-                    <span class="alert-link"> CONGRATULATIONS! </span> You won this bid!
+                    <span class="alert-link"> Parabéns! </span> Voce adiquiriu esse produto. Entre em contato com o Suporte para receber as orientações.
                </center>
             {% else %}
                 <br />
                 <center class="alert alert-danger" role="alert" style="margin: 10% auto 5% auto">
-                    <span class="alert-link"> BETTER LUCK NEXT TIME! </span> You lost this bid.
+                    <span class="alert-link"> Mais sorte na proxima vez </span> Você não conseguiu levar este produto.
                 </center>
             {% endif %} 
             
@@ -35,16 +35,16 @@
             <h1 style="margin-bottom: 30px" >Details for {{ object.productnames }}: </h1>
               <dl class="row">
 
-                  <dt class="col-sm-4 mb-3 d-block text-muted">Highest Bidder: </dt>
+                  <dt class="col-sm-4 mb-3 d-block text-muted">Ganhador: </dt>
                   <dd class="col-sm-8"> {{ object.bidder }} </dd>
                   
                   <dt class="col-sm-4 mb-3 d-block text-muted">Final Bid:</dt>
                   <dd class="col-sm-8"> ${{ object.finalbid }} </dd>
 
-                  <dt class="col-sm-4 mb-3 d-block text-muted">Listed by:</dt>
-                  <dd class="col-sm-8"> {{ object.lister }} </dd>
+                  <!--<dt class="col-sm-4 mb-3 d-block text-muted">Listed by:</dt>
+                  <dd class="col-sm-8"> {{ object.lister }} </dd>!-->
                   
-                  <dd class="col-sm-8" style="margin-top: 5%"> <a href="{% url 'index' %}"> Checkout other Listings! </a> </dd>
+                  <dd class="col-sm-8" style="margin-top: 5%"> <a href="{% url 'index' %}"> Verificar outros produtos </a> </dd>
               </dl>
         </div>
     </div>
