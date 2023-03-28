@@ -5,7 +5,7 @@
 <!-- HEADER -->
 <header class="bg-secondary text-center py-5 mb-4">
   <div class="container">
-    <h1 class="font-weight-light text-white">CLOSED LISTINGS </h1>
+    <h1 class="font-weight-light text-white" style="margin: 4% auto -1%" >Produtos vendidos </h1>
   </div>
 </header>
 
@@ -32,14 +32,14 @@
               {% endif %}  
               <div class="card-body text-center">
                   <a href="{% url 'closed' object.listingid %}">
-                      <h5 class="card-title mb-0"> [CLOSED] {{ object.productnames }} </h5>
+                      <h5 class="card-title mb-0"> [Fechado] {{ object.productnames }} </h5>
                   </a>
               </div>
           </div>
       </div>
 
       {% empty %}
-          <h7 >  No closed listings yet. <a href="{% url 'index' %}"> View Active Listings. </a>  </h7>
+          <h7 >  Não há produtos fechados ainda. <a href="{% url 'index' %}"> Visualizar Itens ativos. </a>  </h7>
       {% endfor %}
       <!-- LOOP TO SHOW ALL CLOSED ITEMS WON -->
  
