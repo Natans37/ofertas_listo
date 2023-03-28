@@ -24,12 +24,15 @@
         <div class="container-fluid">
 
         <!-- LEFT SIDE OF HEADER -->
-            <a class="navbar-brand" href="{% url 'index' %}">AUCTIONS</a>
-                <div style="color:white; font-size: 12px">
+        <div>
+            <a class="navbar-brand" href="{% url 'index' %}">  <img src="https://raw.githubusercontent.com/Natans37/e-commerce-website/254db792501b2711e2f183fbc5092b12d1eadac6/auctions/static/img/Post_para_Instagram_Promo%C3%A7%C3%A3o_de_Aparelhos_Neon__Post_para_Facebook__Paisagem____2_-removebg-preview.png" width="90" height="70"></a>
+    </div>
+      
+        <div style="color:rgb(204, 187, 33); font-size: 15px">
                     {% if user.is_authenticated %}
-                            Signed in as <strong>{{ user.username }}</strong>.
+                            Logado como <strong>{{ user.username }}</strong>.
                     {% else %}
-                            Not signed in.
+                            Não Logado.
                     {% endif %}
                 </div>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,11 +43,11 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
+                    <a class="nav-link" href="{% url 'index' %}">Lista de Produtos</a>
                 </li>
             {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'watchlist' %}">Watchlist 
+                    <a class="nav-link" href="{% url 'watchlist' %}">Meu favoritos
                         {% if watchcount is 0 %}
                     </a>
                         {% else %}
@@ -52,10 +55,10 @@
                         {% endif %}
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'category' %}">Categories</a>      
+                    <a class="nav-link" href="{% url 'category' %}">Categorias</a>      
                 </li
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'create' %}">Create Listings</a>
+                    <a class="nav-link" href="{% url 'create' %}">Criar Produtos</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
@@ -65,7 +68,7 @@
                         <a class="nav-link" href="{% url 'login' %}">Log In</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                        <a class="nav-link" href="{% url 'register' %}">Registrar</a>
                     </li>
             {% endif %}
             
@@ -80,7 +83,7 @@
 
     <footer class="py-5 bg-dark" style="margin-top: 10%; display: block;">
         <div class="container">
-            <p class="m-0 text-center text-white">Copyright &copy; Angelu Garingo 2020</p>
+            <p class="m-0 text-center text-white">Copyright &copy; Sistemas Corporativos 2023</p>
         </div>
     </footer>
 
