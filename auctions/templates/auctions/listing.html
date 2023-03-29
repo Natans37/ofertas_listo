@@ -127,26 +127,61 @@
           <div id="countdown">
             <div>
               <span id="days"></span>
-              <div class="smalltext">Dias</div>
+              <div class="smalltext">Dia(s)</div>
             </div>
             <div>
               <span id="hours"></span>
-              <div class="smalltext">Horas</div>
+              <div class="smalltext">Hora(s)</div>
             </div>
             <div>
               <span id="minutes"></span>
-              <div class="smalltext">Minutos</div>
+              <div class="smalltext">Min</div>
             </div>
             <div>
               <span id="seconds"></span>
-              <div class="smalltext">Segundos</div>
+              <div class="smalltext">Seg</div>
             </div>
           </div>
+
+          <style> 
+          #countdown {
+  font-size: 0.8em;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+
+#countdown span {
+  display: inline-block;
+  margin: 0 10px;
+  padding: 10px;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+}
+
+#countdown span:first-child {
+  background-color: #ffc107;
+}
+
+#countdown span:last-child {
+  background-color: #ccc;
+}
+
+#countdown .time-label {
+  font-size: 0.5em;
+  text-transform: uppercase;
+  color: #666;
+  margin-top: 5px;
+}
+
+          
+          
+          </style>
 
           <script>
             function countdown() {
               var now = new Date();
-              var eventDate = new Date("2023-03-29T15:42:00"); // definir data de termino 
+              var eventDate = new Date("2023-03-30T17:27:00"); // definir data de termino 
               var currentTime = now.getTime();
               var eventTime = eventDate.getTime();
 
