@@ -4,3 +4,4 @@ commerce/__pycache__
 venv_bids/
 auctions/templates/auctions/listing.html
 db.sqlite3
+auctions/static/img/Thumbs.db
