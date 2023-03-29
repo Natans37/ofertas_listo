@@ -121,8 +121,8 @@
           <!--<dt class="col-sm-4 mb-3 d-block text-muted">Date Posted:</dt>
           <dd class="col-sm-8"> {{ object.created }} </dd>!-->
 
-          <dt class="col-sm-4 mb-3 d-block text-muted">Data Final:</dt>
-          <dd class="col-sm-8"> {{ endtime }} </dd>
+          <dt id="data_final" class="col-sm-4 mb-3 d-block text-muted"> Data Final: </dt>
+          <dd class="col-sm-8"> {{ endtime }} </dd> 
 
           <div id="countdown">
             <div>
@@ -146,7 +146,7 @@
           <script>
             function countdown() {
               var now = new Date();
-              var eventDate = new Date("2023-04-28T17:42:00"); // definir data de termino 
+              var eventDate = new Date("2023-03-29T15:42:00"); // definir data de termino 
               var currentTime = now.getTime();
               var eventTime = eventDate.getTime();
 
@@ -172,11 +172,18 @@
 
               setTimeout(countdown, 1000);
 
-              var intervalId = setInterval(checkCountdown, 1000);
+              if (remTime <= 0) {
+      document.getElementById("dar_lance").style.display = "none";
+      document.getElementById("form_valor").style.display = "none";
+      document.getElementById("countdown").style.display = "none";
+      document.getElementById("data_final").style.display = "none";
 
-
+      clearInterval(intervalId); // limpar o intervalo, já que não é mais necessário
+    }
 
             }
+
+            var intervalId = setInterval(checkCountdown, 1000);
 
           </script>
 
@@ -201,11 +208,11 @@
         <!-- SUBMIT BID FORM -->
         {% if user.username %}
         <form action="{% url 'bid' object.id %}" method="post">
-          <div>
+          <div id="form_valor">
             <b><p> Entre com o valor:</p></b>
             {% csrf_token %}
             {{ bidform.bidprice|as_crispy_field }}
-            <button class="btn btn-lg btn-warning btn-block text-uppercase" style="font-size: 80%; border-radius: 5rem; letter-spacing: .1rem; font-weight: bold;padding: 1rem;transition: all 0.2s;">
+            <button id="dar_lance" class="btn btn-lg btn-warning btn-block text-uppercase" style="font-size: 80%; border-radius: 5rem; letter-spacing: .1rem; font-weight: bold;padding: 1rem;transition: all 0.2s;">
               Dar lance</button>
           </div>
         </form>
