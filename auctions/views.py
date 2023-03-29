@@ -211,6 +211,7 @@ def closebid(request, listingid):
         closebid.productnames = listing.productnames
         closebid.images = listing.images
         closebid.category = listing.category
+        closebid.patrimonio = listing.patrimonio
         try:
             bid = Bidding.objects.get(listingid=listingid,bidprice=listing.startingbids)
             closebid.bidder = bid.bidder
