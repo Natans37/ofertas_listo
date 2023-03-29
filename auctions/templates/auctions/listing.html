@@ -25,7 +25,7 @@
           <div class="container desc">
             <div class="row">
               <div class="col-11">
-                <dt class="col-sm-4 mb-3 d-block text-muted">Description:</dt>
+                <dt class="col-sm-4 mb-3 d-block text-muted">Descrição:</dt>
                 <dd class="col-sm-12" style="word-wrap: break-word; margin: 20px;"> {{ object.descriptions }} </dd>
               </div>
             </div>
@@ -50,7 +50,7 @@
                     <form action="{% url 'comment' object.id %}" method="post">
                       {% csrf_token %}
                       {{ cform.comment|as_crispy_field }}
-                      <button type="submit" class="btn btn-default">Comment</button>
+                      <button type="submit" class="btn btn-default">Comentar</button>
                     </form>
                   </span>
                 </div>
@@ -64,7 +64,7 @@
                   <a data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false"
                     aria-controls="multiCollapseExample1">
                     <div class="comments-details">
-                      <span class="total-comments comments-sort"> {{ ccount }}&nbsp; Comments</span>
+                      <span class="total-comments comments-sort"> {{ ccount }}&nbsp; Comentários</span>
                       <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-caret-up-fill" fill="currentColor"
                         xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -146,7 +146,7 @@
           <script>
             function countdown() {
               var now = new Date();
-              var eventDate = new Date("2023-03-28T17:42:00"); // definir data de termino 
+              var eventDate = new Date("2023-04-28T17:42:00"); // definir data de termino 
               var currentTime = now.getTime();
               var eventTime = eventDate.getTime();
 
@@ -202,6 +202,7 @@
         {% if user.username %}
         <form action="{% url 'bid' object.id %}" method="post">
           <div>
+            <b><p> Entre com o valor:</p></b>
             {% csrf_token %}
             {{ bidform.bidprice|as_crispy_field }}
             <button class="btn btn-lg btn-warning btn-block text-uppercase" style="font-size: 80%; border-radius: 5rem; letter-spacing: .1rem; font-weight: bold;padding: 1rem;transition: all 0.2s;">
