@@ -17,12 +17,12 @@ class ListingForm(forms.ModelForm):
     class  Meta:
         model = Listing
         labels = {
-            'patrimonio': 'patrimonio',
-            'productnames' : 'Productname',
-            'descriptions' : 'Description',
-            'startingbids' : 'Starting Bids',
-            'images' : 'Image URL',
-            'category' : 'Category'
+            'patrimonio': 'Patrimonio',
+            'productnames' : 'Produto',
+            'descriptions' : 'Descrição',
+            'startingbids' : 'Valor inicial',
+            'images' : 'Imagem URL',
+            'category' : 'Categoria'
         }
         fields = [
             'patrimonio',
