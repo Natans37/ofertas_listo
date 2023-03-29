@@ -216,7 +216,7 @@ def closebid(request, listingid):
             closebid.bidder = bid.bidder
             closebid.finalbid = bid.bidprice
             closebid.save()
-            bid.delete()
+            #bid.delete()
         except:
             closebid.bidder = listing.lister
             closebid.finalbid = listing.startingbids
