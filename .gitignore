@@ -5,3 +5,4 @@ venv_bids/
 auctions/templates/auctions/listing.html
 db.sqlite3
 auctions/static/img/Thumbs.db
+bkp_banco/db.sqlite3.bkp
