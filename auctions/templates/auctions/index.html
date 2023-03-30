@@ -14,7 +14,7 @@
     <!-- LOOP TO OUTPUT ACTIVE LISTINGS -->
     <div class="row text-left">
         {% if user.is_superuser %}
-        <a class="nav-link" href="{% url 'closeallbids' %}">fechar Tudo</a>
+        <a href="{% url 'closeallbids' %}"><button id="close-all-listings-btn" class="btn btn-primary btn-lg btn-primary btn-block text-uppercase" style="color: white; font-size: 80%; border-radius: 5rem; letter-spacing: .1rem; font-weight: bold;padding: 1rem;transition: all 0.2s;">Fechar todos os produtos </button></a>
         </li>
         {% endif %}
         {% for object in object %}
@@ -52,6 +52,17 @@
         {% endfor %}
     </div>
 </div>
+
+<script>
+    document.getElementById("close-all-listings-btn").onclick = function() {
+      if (confirm("Deseja fechar todos os produtos?")) {
+        window.location.href = "{% url 'closeallbids' %}";
+        ("Todos os produtos fechados com Sucesso!")
+      }
+    };
+  </script>
+  
+  
 
 {% endblock %}
 
