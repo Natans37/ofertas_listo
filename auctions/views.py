@@ -371,11 +371,14 @@ def register(request):
         username = request.POST["username"]
         email = request.POST["email"]
 
-        # Ensure email has correct domain
-        if not re.match(r"[^@]+@soulisto\.com\.br$", email):
-            return render(request, "auctions/register.html", {
-                "message": "Please enter a valid email with the @soulisto.com.br domain."
-            })
+        # Validação de emails Listo
+        with open ('emails.txt', 'r') as f:
+            emails_validos = f.read().splitlines()
+
+        if email not in emails_validos:
+            return render(request, "auctions/register.html",{"message": "Entre com um usuário válido."})   
+        
+         
 
         # Ensure password matches confirmation
         password = request.POST["password"]
@@ -384,6 +387,7 @@ def register(request):
             return render(request, "auctions/register.html", {
                 "message": "Passwords must match."
             })
+        
 
         # Attempt to create new user
         try:
@@ -397,3 +401,6 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+def termos_e_condicoes(request):
+    return render(request, "auctions/termos.html")
