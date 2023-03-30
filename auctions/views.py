@@ -475,5 +475,6 @@ def closeallbids(request):
                 closebidlist = Closebid.objects.get(listingid=listing.id)
             listing.delete()
 
-    return render(request, "auctions/index.html", )
+    return render(request, "auctions/categories.html", 
+)
    
