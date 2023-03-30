@@ -18,20 +18,41 @@
                 <form action="{% url 'register' %}" method="post">
                     {% csrf_token %}
                   <div class="form-group">
-                    <input type="text" id="email" class="form-control" autofocus type="text" name="username" placeholder="Username">
+                    <input type="text" id="email" class="form-control" autofocus type="text" name="username" placeholder="Usuário ex: joao.silva">
                   </div>
                   <div class="form-group">
-                    <input type="email" name="email" placeholder="Email Address" id="text" class="form-control">
+                    <input type="email" name="email" placeholder="Email Address" id="text" class="form-control" required readonly>
                   </div>
                   <div class="form-group">
-                    <input type="password" name="password" placeholder="Password" id="password" class="form-control">
+                    <input type="password" name="password" placeholder="Password" id="password" class="form-control" required>
                   </div>
                   <div class="form-group">
-                    <input type="password" name="confirmation" placeholder="Confirm Password" id="password" class="form-control">
+                    <input type="password" name="confirmation" placeholder="Confirm Password" id="password" class="form-control" required>
                   </div>
-                  <input class="btn btn-secondary btn-block mb-4 login-card" type="submit" value="Register"  >
+                  <input class="btn btn-secondary btn-block mb-4 login-card" type="submit" value="Register">
+                  <p class="login-card-footer-text" style="margin: 10px;">Ao se registrar, você concorda com nossos <a href="{% url 'termos' %}" target="_blank">termos e condições</a>.</p>
+                  <label>
+                    <input type="checkbox" name="ciente" value="true" required>
+                    Estou ciente
+                  </label>
                 </form>
-            <p class="login-card-footer-text">Já tem uma conta? <a href="{% url 'login' %}">Logue aqui.</a></p>
+
+                <script>
+                  // Get references to the username and email input fields
+                  const usernameInput = document.getElementById('email');
+                  const emailInput = document.getElementById('text');
+                
+                  // Update the email input field whenever the username input field changes
+                  usernameInput.addEventListener('input', (event) => {
+                    const username = event.target.value;
+                    emailInput.value = `${username}@soulisto.com.br`;
+                  });
+                </script>
+                
+                
+            <p class="login-card-footer-text" style="margin-top: 25px;">Já tem uma conta? <a href="{% url 'login' %}">Logue aqui.</a></p>
+
+
      
             </div>
           </div>
