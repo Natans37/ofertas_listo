@@ -376,7 +376,7 @@ def login_view(request):
                 "message": "Invalid username and/or password."
             })
     else:
-        return render(request, "auctions/login.html")
+        return render({"message": "Invalid username and/or password."},request, "auctions/login.html")
 
 
 def logout_view(request):
@@ -463,6 +463,7 @@ def closeallbids(request):
                 pass
             try:
                 closebidlist = Closebid.objects.get(listingid=listing.id)
+                
             except:
                 closebid.lister = listing.lister
                 closebid.bidder = listing.lister
@@ -474,7 +475,5 @@ def closeallbids(request):
                 closebid.save()
                 closebidlist = Closebid.objects.get(listingid=listing.id)
             listing.delete()
-
-    return render(request, "auctions/categories.html", 
-)
-   
+        
+    return render(request, 'auctions/categories.html')
