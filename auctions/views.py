@@ -475,7 +475,5 @@ def closeallbids(request):
                 closebidlist = Closebid.objects.get(listingid=listing.id)
             listing.delete()
 
-    return render(request, "auctions/closed.html", {
-          "message": "Produtos fechados"
-    })
+    return render(request, "auctions/index.html", )
    
