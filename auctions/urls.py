@@ -21,4 +21,5 @@ urlpatterns = [
     path("category", views.category, name="category"),
     path("category/<str:cats>", views.categorylistings, name="categorylistings"),   
     path("listing/closed", views.allclosed, name="allclosed"),
+    path("termos/", views.termos_e_condicoes, name="termos"),
 ]
