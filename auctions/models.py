@@ -64,7 +64,7 @@ class Closebid(models.Model):
     listingid = models.IntegerField()
     category = models.CharField(max_length=50, blank=True, null=True)
     finalbid = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
-    patrimonio = models.CharField(null=True, unique=True, max_length=20)
+    patrimonio = models.CharField(null=True, unique=False, max_length=20)
 
     def __str__(self):
         return f"{self.listingid}"
