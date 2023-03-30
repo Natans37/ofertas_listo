@@ -56,8 +56,7 @@
 <script>
     document.getElementById("close-all-listings-btn").onclick = function() {
       if (confirm("Deseja fechar todos os produtos?")) {
-        window.location.href = "{% url 'closeallbids' %}";
-        ("Todos os produtos fechados com Sucesso!")
+        window.location.href = "{% url 'closeallbids' %}"
       }
     };
   </script>
