@@ -15,17 +15,19 @@ from .models import User, Listing, Bidding, Watchlist, Closebid, Comment, Catego
 
 from .forms import ListingForm, BiddingForm, CommentForm
 
-def index(request):                                                             
+
+def index(request):
     listing = Listing.objects.all()
     try:
         watch = Watchlist.objects.filter(watcher=request.user.username)
-        watchcount=len(watch)
+        watchcount = len(watch)
     except:
-        watchcount=None
+        watchcount = None
     return render(request, "auctions/index.html", {
         'object': listing,
         'watchcount': watchcount
     })
+
 
 @login_required
 def createlisting(request):
@@ -38,9 +40,9 @@ def createlisting(request):
         watchcount = None
     if request.method == "POST":
         if form.is_valid():
-            now = datetime.now()                                                #save date created with current timezone
+            now = datetime.now()  # save date created with current timezone
             fs = form.save(commit=False)
-            fs.lister = request.user                                            #save info not listed at forms.py
+            fs.lister = request.user  # save info not listed at forms.py
             fs.created = now
             fs.save()
         return HttpResponseRedirect(reverse('index'))
@@ -51,7 +53,8 @@ def createlisting(request):
             'watchcount': watchcount
         })
 
-def listingpage(request,id):
+
+def listingpage(request, id):
     listing = Listing.objects.get(id=id)
     comment = Comment.objects.filter(listingid=id)
     try:
@@ -62,14 +65,14 @@ def listingpage(request,id):
     if request.user.username:
         try:
             if Watchlist.objects.get(watcher=request.user.username, listingid=id):
-                added=True
+                added = True
         except:
             added = False
         try:
             watch = Watchlist.objects.filter(watcher=request.user.username)
-            watchcount=len(watch)
+            watchcount = len(watch)
         except:
-            watchcount=None
+            watchcount = None
         try:
             ccount = Comment.objects.filter(listingid=id)
             ccount = len(ccount)
@@ -77,13 +80,13 @@ def listingpage(request,id):
             ccount = len(ccount)
         try:
 
-            if listing.lister == request.user.username :
+            if listing.lister == request.user.username:
                 lister = True
             else:
                 lister = False
         except:
             return redirect('index')
-    else: 
+    else:
         ccount = Comment.objects.filter(listingid=id)
         ccount = len(ccount)
         added = False
@@ -100,8 +103,8 @@ def listingpage(request,id):
         'added': added,
         'bidform': bidform,
         "watchcount": watchcount,
-        "error":request.COOKIES.get('error'),
-        "success":request.COOKIES.get('success'),
+        "error": request.COOKIES.get('error'),
+        "success": request.COOKIES.get('success'),
         "bidcount": bidcount,
         "lister": lister,
         'cform': cform,
@@ -109,11 +112,12 @@ def listingpage(request,id):
         "ccount": ccount
     })
 
+
 @login_required
 def addwatch(request, id):
     if request.user.username:
         listing = Listing.objects.get(id=id)
-        watchers = Watchlist(watcher = request.user.username, listingid = id)
+        watchers = Watchlist(watcher=request.user.username, listingid=id)
         watchers.lister = listing.lister
         watchers.finalbid = listing.startingbids
         watchers.productnames = listing.productnames
@@ -123,8 +127,9 @@ def addwatch(request, id):
     else:
         return redirect('index')
 
+
 @login_required
-def removewatch(request,id):
+def removewatch(request, id):
     if request.user.username:
         try:
             Watchlist.objects.filter(listingid=id).delete()
@@ -134,16 +139,18 @@ def removewatch(request,id):
     else:
         return redirect('index')
 
+
 @login_required
 def watchlist(request):
     try:
         watchlist = Watchlist.objects.filter(watcher=request.user.username)
         closebid = Closebid.objects.filter(bidder=request.user.username)
-        watchcount = len(watchlist)                                                 #count how many rows in table Watchlist using len()                                    
+        # count how many rows in table Watchlist using len()
+        watchcount = len(watchlist)
     except:
         watchcount = None
     try:
-        bidwincount = Closebid.objects.filter(bidder = request.user.username)
+        bidwincount = Closebid.objects.filter(bidder=request.user.username)
         bidwincount = len(bidwincount)
     except:
         binwincoun = None
@@ -158,9 +165,10 @@ def watchlist(request):
         'object': watchlist,
         "watchcount": watchcount,
         "closedbid": closebid,
-        "closed" : closed,
+        "closed": closed,
         "bidwincount": bidwincount
     })
+
 
 @login_required
 def bid(request, listingid):
@@ -174,29 +182,32 @@ def bid(request, listingid):
             listing.startingbids = bid
             listing.save()
             try:
-                if  Bidding.objects.filter(id=listingid):
+                if Bidding.objects.filter(id=listingid):
                     bidrow = Bidding.objects.filter(id=listingid)
                     bidrow.delete()
                     fs.time = now
                 fs = bidform.save(commit=False)
                 fs.bidder = request.user.username
                 fs.listingid = listingid
-                fs.save()                                                      
+                fs.save()
             except:
                 fs = bidform.save(commit=False)
                 fs.bidder = request.user
                 fs.listingid = listingid
-                fs.save()   
+                fs.save()
             response = redirect('listingpage', id=listingid)
-            response.set_cookie('success','Lance efetuado com sucesso!.', max_age=1)
+            response.set_cookie(
+                'success', 'Lance efetuado com sucesso!.', max_age=1)
             return response
         else:
             response = redirect('listingpage', id=listingid)
-            response.set_cookie('error','Você deve fornecer um valor maior que o preço atual', max_age=1)
+            response.set_cookie(
+                'error', 'Você deve fornecer um valor maior que o preço atual', max_age=1)
             return response
     else:
         return redirect('index')
-        
+
+
 @login_required
 def closebid(request, listingid):
     if request.user.username:
@@ -213,11 +224,12 @@ def closebid(request, listingid):
         closebid.category = listing.category
         closebid.patrimonio = listing.patrimonio
         try:
-            bid = Bidding.objects.get(listingid=listingid,bidprice=listing.startingbids)
+            bid = Bidding.objects.get(
+                listingid=listingid, bidprice=listing.startingbids)
             closebid.bidder = bid.bidder
             closebid.finalbid = bid.bidprice
             closebid.save()
-            #bid.delete()
+            # bid.delete()
         except:
             closebid.bidder = listing.lister
             closebid.finalbid = listing.startingbids
@@ -255,16 +267,17 @@ def closebid(request, listingid):
         listing.delete()
         try:
             watch = Watchlist.objects.filter(watcher=request.user.username)
-            watchcount=len(watch)
+            watchcount = len(watch)
         except:
             watchcount = None
-        return render(request,"auctions/winner.html",{
+        return render(request, "auctions/winner.html", {
             "closebidlist": closebidlist,
             "name": name,
-            "watchcount":watchcount
-        })   
+            "watchcount": watchcount
+        })
     else:
         return redirect('index')
+
 
 @login_required
 def closed(request, listingid):
@@ -279,21 +292,23 @@ def closed(request, listingid):
         "watchcount": watchcount
     })
 
+
 @login_required
 def comment(request, listingid):
     if request.method == "POST":
         comment = Comment.objects.all()
         cform = CommentForm(request.POST or None)
         if cform.is_valid():
-            now = datetime.now()                                               
-            fs = cform.save(commit=False)   
+            now = datetime.now()
+            fs = cform.save(commit=False)
             fs.listingid = listingid
-            fs.user = request.user.username                               
+            fs.user = request.user.username
             fs.time = now
             fs.save()
         return redirect('listingpage', id=listingid)
     else:
-        return redirect('index') 
+        return redirect('index')
+
 
 def category(request):
     category = Category.objects.all()
@@ -317,6 +332,7 @@ def category(request):
         "closedbid": closedbid
     })
 
+
 def categorylistings(request, cats):
     category_posts = Listing.objects.filter(category=cats)
     try:
@@ -330,6 +346,7 @@ def categorylistings(request, cats):
         'watchcount': watchcount
     })
 
+
 def allclosed(request):
     closedlist = Closebid.objects.all()
     try:
@@ -341,6 +358,7 @@ def allclosed(request):
         'closedlist': closedlist,
         'watchcount': watchcount
     })
+
 
 def login_view(request):
     if request.method == "POST":
@@ -372,13 +390,11 @@ def register(request):
         email = request.POST["email"]
 
         # Validação de emails Listo
-        with open ('emails.txt', 'r') as f:
+        with open('emails.txt', 'r') as f:
             emails_validos = f.read().splitlines()
 
         if email not in emails_validos:
-            return render(request, "auctions/register.html",{"message": "Entre com um usuário válido."})   
-        
-         
+            return render(request, "auctions/register.html", {"message": "Entre com um usuário válido."})
 
         # Ensure password matches confirmation
         password = request.POST["password"]
@@ -387,7 +403,6 @@ def register(request):
             return render(request, "auctions/register.html", {
                 "message": "Passwords must match."
             })
-        
 
         # Attempt to create new user
         try:
@@ -402,5 +417,65 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
+
 def termos_e_condicoes(request):
     return render(request, "auctions/termos.html")
+
+
+def closeallbids(request):
+    if request.user.is_superuser:
+        # Obtém todos os objetos Listing do índice
+        listings = Listing.objects.all()
+        for listing in listings:
+            closebid = Closebid()
+            closebid.lister = listing.lister
+            closebid.listingid = listing.id
+            closebid.productnames = listing.productnames
+            closebid.images = listing.images
+            closebid.category = listing.category
+            closebid.patrimonio = listing.patrimonio
+            try:
+                bid = Bidding.objects.get(
+                    listingid=listing.id, bidprice=listing.startingbids)
+                closebid.bidder = bid.bidder
+                closebid.finalbid = bid.bidprice
+                closebid.save()
+                bid.delete()
+            except:
+                closebid.bidder = listing.lister
+                closebid.finalbid = listing.startingbids
+                closebid.save()
+            try:
+                if Watchlist.objects.filter(listingid=listing.id):
+                    watch = Watchlist.objects.filter(listingid=listing.id)
+                    watch.delete()
+            except:
+                pass
+            try:
+                comment = Comment.objects.filter(listingid=listing.id)
+                comment.delete()
+            except:
+                pass
+            try:
+                bid = bid.objects.filter(listingid=listing.id)
+                bid.delete()
+            except:
+                pass
+            try:
+                closebidlist = Closebid.objects.get(listingid=listing.id)
+            except:
+                closebid.lister = listing.lister
+                closebid.bidder = listing.lister
+                closebid.listingid = listing.id
+                closebid.finalbid = listing.startingbids
+                closebid.productnames = listing.productnames
+                closebid.images = listing.images
+                closebid.category = listing.category
+                closebid.save()
+                closebidlist = Closebid.objects.get(listingid=listing.id)
+            listing.delete()
+
+    return render(request, "auctions/closed.html", {
+          "message": "Produtos fechados"
+    })
+   
