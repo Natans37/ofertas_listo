@@ -1,10 +1,12 @@
 
 
 {% block content %}
+{% if user.is_superuser %}
   <h1>Editar Produto</h1>
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Salvar</button>
   </form>
+  {% endif %}
 {% endblock %}
