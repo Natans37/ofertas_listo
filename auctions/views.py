@@ -375,7 +375,8 @@ def login_view(request):
             return render(request, "auctions/login.html", {
                 "message": "Invalid username and/or password."
             })
-  
+    else:
+        return render(request, "auctions/login.html")
 
 def logout_view(request):
     logout(request)
