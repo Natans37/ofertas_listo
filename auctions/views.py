@@ -9,10 +9,12 @@ from django.contrib.sessions.models import Session
 from datetime import datetime
 from django.utils.timezone import now
 import re
-
-
+from django.contrib.auth.forms import PasswordResetForm
+from django.core.mail import send_mail
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Listing
+from .forms import ListingForm
 from .models import User, Listing, Bidding, Watchlist, Closebid, Comment, Category
-
 from .forms import ListingForm, BiddingForm, CommentForm
 
 
@@ -378,6 +380,7 @@ def login_view(request):
     else:
         return render(request, "auctions/login.html")
 
+
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
@@ -476,3 +479,41 @@ def closeallbids(request):
             listing.delete()
         
     return render(request, 'auctions/categories.html')
+
+
+def password_reset(request):
+    if request.method == 'POST':
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            form.save(request=request)
+            return render(request, 'auctions/password_reset_done.html')
+    else:
+        form = PasswordResetForm()
+    return render(request, 'auctions/password_reset_form.html', {'form': forms})
+
+
+def password_reset_done(request):
+    return render(request, 'auctions/password_reset_done.html')
+
+
+def editar_produto(request, id):
+    # busca o objeto Listing a ser editado
+    listing = get_object_or_404(Listing, id=id)
+
+    if request.method == 'POST':
+        # cria uma instância do ListingForm, preenchido com os dados do POST
+        form = ListingForm(request.POST, instance=listing)
+
+        if form.is_valid():
+            # salva o objeto Listing atualizado no banco de dados
+            form.save()
+            # redireciona o usuário para a página de detalhes do produto atualizado
+            return redirect('listingpage', id=id)
+            
+
+    else:
+        # exibe o formulário de edição de produto preenchido com os dados atuais do produto
+        form = ListingForm(instance=listing)
+
+    context = {'form': form, 'listing': listing}
+    return render(request, 'auctions/editar_produto.html', context)
