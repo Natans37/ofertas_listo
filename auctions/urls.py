@@ -23,4 +23,7 @@ urlpatterns = [
     path("listing/closed", views.allclosed, name="allclosed"),
     path("termos/", views.termos_e_condicoes, name="termos"),
     path("closeallbids/", views.closeallbids, name="closeallbids"),
+    path("password_reset/", views.password_reset, name="password_reset"),
+    path('produto/<int:id>/editar', views.editar_produto, name='editar_produto'),
+
 ]
