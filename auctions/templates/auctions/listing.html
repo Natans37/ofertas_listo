@@ -283,7 +283,7 @@
         <!-- CLOSE BID-->
         <br />
         {% if user.username %}
-        {% if lister %}
+        {% if user.is_superuser %}
         <a href="{% url 'closebid' object.id %}"><button
             class="btn btn-primary btn-lg btn-primary btn-block text-uppercase" id="close-bid-button"
             onclick="closeBid()"
