@@ -17,7 +17,8 @@
         <img class="img-fluid rounded mb-3 mb-md-0" src="{{ object.images }}" style="width:80%;margin:50px;border:10px"
           class="ml-lg-5 order-1 order-lg-2" alt="No Image Available for {{ object.productnames}}">
         {% else %}
-        <img class="img-fluid rounded mb-3 mb-md-0" src="https://raw.githubusercontent.com/Natans37/e-commerce-website/254db792501b2711e2f183fbc5092b12d1eadac6/auctions/static/img/Post_para_Instagram_Promo%C3%A7%C3%A3o_de_Aparelhos_Neon__Post_para_Facebook__Paisagem____2_-removebg-preview.png"
+        <img class="img-fluid rounded mb-3 mb-md-0"
+          src="https://raw.githubusercontent.com/Natans37/e-commerce-website/254db792501b2711e2f183fbc5092b12d1eadac6/auctions/static/img/Post_para_Instagram_Promo%C3%A7%C3%A3o_de_Aparelhos_Neon__Post_para_Facebook__Paisagem____2_-removebg-preview.png"
           style="width:80%;margin:50px;border:10px" alt="No-Image-Available">
         {% endif %}
         <br /><br /><br />
@@ -118,14 +119,15 @@
           <dt class="col-sm-4 mb-3 d-block text-muted">Patrimônio:</dt>
           <dd class="col-sm-8"> {{ object.patrimonio }} </dd>
 
+          {% if user.is_superuser %}
           <a href="{% url 'editar_produto' id=object.id %}" class="btn btn-primary">Editar produto</a>
-
+          {% endif %}
 
           <!--<dt class="col-sm-4 mb-3 d-block text-muted">Date Posted:</dt>
           <dd class="col-sm-8"> {{ object.created }} </dd>!-->
 
           <dt id="data_final" class="col-sm-4 mb-3 d-block text-muted"> Data Final: </dt>
-          <dd class="col-sm-8"> {{ endtime }} </dd> 
+          <dd class="col-sm-8"> {{ endtime }} </dd>
 
           <div id="countdown">
             <div>
@@ -146,39 +148,36 @@
             </div>
           </div>
 
-          <style> 
-          #countdown {
-  font-size: 0.8em;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-}
+          <style>
+            #countdown {
+              font-size: 0.8em;
+              text-align: center;
+              display: flex;
+              justify-content: center;
+            }
 
-#countdown span {
-  display: inline-block;
-  margin: 0 10px;
-  padding: 10px;
-  background-color: #f1f1f1;
-  border-radius: 5px;
-}
+            #countdown span {
+              display: inline-block;
+              margin: 0 10px;
+              padding: 10px;
+              background-color: #f1f1f1;
+              border-radius: 5px;
+            }
 
-#countdown span:first-child {
-  background-color: #ffc107;
-}
+            #countdown span:first-child {
+              background-color: #ffc107;
+            }
 
-#countdown span:last-child {
-  background-color: #ccc;
-}
+            #countdown span:last-child {
+              background-color: #ccc;
+            }
 
-#countdown .time-label {
-  font-size: 0.5em;
-  text-transform: uppercase;
-  color: #666;
-  margin-top: 5px;
-}
-
-          
-          
+            #countdown .time-label {
+              font-size: 0.5em;
+              text-transform: uppercase;
+              color: #666;
+              margin-top: 5px;
+            }
           </style>
 
           <script>
@@ -211,13 +210,13 @@
               setTimeout(countdown, 1000);
 
               if (remTime <= 0) {
-      document.getElementById("dar_lance").style.display = "none";
-      document.getElementById("form_valor").style.display = "none";
-      document.getElementById("countdown").style.display = "none";
-      document.getElementById("data_final").style.display = "none";
+                document.getElementById("dar_lance").style.display = "none";
+                document.getElementById("form_valor").style.display = "none";
+                document.getElementById("countdown").style.display = "none";
+                document.getElementById("data_final").style.display = "none";
 
-      clearInterval(intervalId); // limpar o intervalo, já que não é mais necessário
-    }
+                clearInterval(intervalId); // limpar o intervalo, já que não é mais necessário
+              }
 
             }
 
@@ -247,10 +246,13 @@
         {% if user.username %}
         <form action="{% url 'bid' object.id %}" method="post">
           <div id="form_valor">
-            <b><p> Entre com o valor:</p></b>
+            <b>
+              <p> Entre com o valor:</p>
+            </b>
             {% csrf_token %}
             {{ bidform.bidprice|as_crispy_field }}
-            <button id="dar_lance" class="btn btn-lg btn-warning btn-block text-uppercase" style="font-size: 80%; border-radius: 5rem; letter-spacing: .1rem; font-weight: bold;padding: 1rem;transition: all 0.2s;">
+            <button id="dar_lance" class="btn btn-lg btn-warning btn-block text-uppercase"
+              style="font-size: 80%; border-radius: 5rem; letter-spacing: .1rem; font-weight: bold;padding: 1rem;transition: all 0.2s;">
               Dar lance</button>
           </div>
         </form>
@@ -258,7 +260,7 @@
         <a href="{% url 'login'%}">
           <button class="btn btn-lg btn-warning btn-block text-uppercase"
             style="font-size: 80%; border-radius: 5rem; letter-spacing: .1rem; font-weight: bold;padding: 1rem;transition: all 0.2s;">
-            Entre  para participar! </button>
+            Entre para participar! </button>
         </a>
         {% endif %}
 
@@ -283,7 +285,8 @@
         {% if user.username %}
         {% if lister %}
         <a href="{% url 'closebid' object.id %}"><button
-            class="btn btn-primary btn-lg btn-primary btn-block text-uppercase" id="close-bid-button" onclick="closeBid()"
+            class="btn btn-primary btn-lg btn-primary btn-block text-uppercase" id="close-bid-button"
+            onclick="closeBid()"
             style="color: white; font-size: 80%; border-radius: 5rem; letter-spacing: .1rem; font-weight: bold;padding: 1rem;transition: all 0.2s;">
             Finalizar produto</button></a>
         {% endif %}
