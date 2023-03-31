@@ -118,6 +118,9 @@
           <dt class="col-sm-4 mb-3 d-block text-muted">Patrimônio:</dt>
           <dd class="col-sm-8"> {{ object.patrimonio }} </dd>
 
+          <a href="{% url 'editar_produto' id=object.id %}" class="btn btn-primary">Editar produto</a>
+
+
           <!--<dt class="col-sm-4 mb-3 d-block text-muted">Date Posted:</dt>
           <dd class="col-sm-8"> {{ object.created }} </dd>!-->
 
