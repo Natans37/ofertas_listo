@@ -2,6 +2,7 @@
 {% load crispy_forms_tags %}
 
 {% block body %}
+{% if user.is_superuser %}
     <body style="margin-top: 100px">
         <section class="get-in-touch">
         <h1 class="title">Criar Produtos</h1>
@@ -31,6 +32,6 @@
         </form>
         </section>
     </body>
-
+    {% endif %}
 {% endblock %}
 
