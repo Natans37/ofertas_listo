@@ -3,16 +3,16 @@
 {% block body %}
 
     <div class="container" style="margin: 15% auto 50% auto">
-        <h3>Summary for {{ name }} </h3>
+        <h3>Resumo de {{ name }} </h3>
         <ul>
             <!-- <li><b>Listed by: </b>{{closebidlist.lister}}</li> -->
             {% if closebidlist.bidder == user.username %}
-            <li><b>Ganhador: </b> {{closebidlist.bidder}} (Owner of the bid) </li>
+            <li><b>Ganhador: </b> {{closebidlist.bidder}} (Dono da licitação) </li>
             {% else %}
             <li><b>Ganhador: </b>{{closebidlist.bidder}}</li>
             {% endif %}
             <li><b>Lance final: $</b>{{closebidlist.finalbid}}</li>
-            <li><b>email: $</b>{{closebidlist.email}}</li>
+            <li><b>E-mail: $</b>{{closebidlist.email}}</li>
         </ul>
     </div>
 
