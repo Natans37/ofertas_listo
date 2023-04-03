@@ -11,10 +11,68 @@
         <h1> <br /><br /><br /><br /><br /> </h1>
     </div>
 
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form action="{% url 'index' %}" method="get" class="form-filter">
+                    <div class="form-group">
+                        <label for="category">Filtrar por categoria:</label>
+                        <div class="input-group">
+                            <select name="category" id="category" class="form-control">
+                                <option value="">Todos</option>
+                                <option value="Monitores">Monitores</option>
+                                <option value="Notebooks">Notebooks</option>
+                                <option value="Impressoras">Impressoras</option>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}" {% if category.id == selected_category %} selected {% endif %}>{{ category.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-primary">Filtrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <style>
+
+.form-filter {
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+}
+
+.input-group select {
+  flex: 1;
+}
+
+.input-group-append button {
+  margin-left: 10px;
+}
+
+
+
+    </style>
+    
+    
+
     <!-- LOOP TO OUTPUT ACTIVE LISTINGS -->
     <div class="row text-left">
         {% if user.is_superuser %}
-        <a href="{% url 'closeallbids' %}"><button id="close-all-listings-btn" class="btn btn-primary btn-lg btn-primary btn-block text-uppercase" style="color: white; font-size: 80%; border-radius: 5rem; letter-spacing: .1rem; font-weight: bold;padding: 1rem;transition: all 0.2s;">Fechar todos os produtos </button></a>
+        <a href="{% url 'closeallbids' %}"><button id="close-all-listings-btn"
+                class="btn btn-primary btn-lg btn-primary btn-block text-uppercase"
+                style="color: white; font-size: 80%; border-radius: 5rem; letter-spacing: .1rem; font-weight: bold;padding: 1rem;transition: all 0.2s;">Fechar
+                todos os produtos </button></a>
         </li>
         {% endif %}
         {% for object in object %}
@@ -35,11 +93,15 @@
                     <center>
                         <h5 class="card-title"> {{ object.productnames }} </h5>
                     </center>
-                    <p class="card-text" style="margin: 5px"> <span style="font-size:small;"> Lance atual: </span> <span
+                    <p class="card-text" style="margin: 5px"> <span style="font-size:small;"> <b>Lance atual:</b> </span> <span
                             style="color: green; font-weight: bold"> ${{ object.startingbids }} </span>
                         <br /> <span
                             style="font-size: small; display: block; text-overflow: ellipsis; word-wrap: break-word; overflow: hidden; max-height: 7.2em; line-height: 1.8em; margin-top: 10px">
-                            {{ object.descriptions }} </span>
+                            <b>Categoria:</b> {{ object.category }} </span>
+                        <span
+                            style="font-size: small; display: block; text-overflow: ellipsis; word-wrap: break-word; overflow: hidden; max-height: 7.2em; line-height: 1.8em; margin-top: 10px">
+                            <b>Descrição:</b> {{ object.descriptions }} </span>
+
                     </p>
                 </div>
                 <div class="card-footer " style="background: white;">
@@ -54,14 +116,14 @@
 </div>
 
 <script>
-    document.getElementById("close-all-listings-btn").onclick = function() {
-      if (confirm("Deseja fechar todos os produtos?")) {
-        window.location.href = "{% url 'closeallbids' %}"
-      }
+    document.getElementById("close-all-listings-btn").onclick = function () {
+        if (confirm("Deseja fechar todos os produtos?")) {
+            window.location.href = "{% url 'closeallbids' %}"
+        }
     };
-  </script>
-  
-  
+</script>
+
+
 
 {% endblock %}
 
