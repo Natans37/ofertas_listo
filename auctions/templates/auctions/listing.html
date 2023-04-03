@@ -119,9 +119,8 @@
           <dt class="col-sm-4 mb-3 d-block text-muted">Patrimônio:</dt>
           <dd class="col-sm-8"> {{ object.patrimonio }} </dd>
 
-          {% if user.is_superuser %}
-          <a href="{% url 'editar_produto' id=object.id %}" class="btn btn-primary">Editar produto</a>
-          {% endif %}
+          <dt class="col-sm-4 mb-3 d-block text-muted">ID:</dt>
+          <dd class="col-sm-8"> {{ object.idp }} </dd>
 
           <!--<dt class="col-sm-4 mb-3 d-block text-muted">Date Posted:</dt>
           <dd class="col-sm-8"> {{ object.created }} </dd>!-->
@@ -279,6 +278,13 @@
             Adicionar a minha lista</button></a>
         {% endif %}
         {% endif %}
+
+        <br>
+        {% if user.is_superuser %}
+          <a href="{% url 'editar_produto' id=object.id %}"> <button class="btn btn-lg btn-info btn-block text-uppercase"
+            style="#ffa500 ; font-size: 80%; border-radius: 5rem; letter-spacing: .1rem; font-weight: bold;padding: 1rem;transition: all 0.2s;">Editar produto
+          </button></a>
+          {% endif %}
 
         <!-- CLOSE BID-->
         <br />
