@@ -18,6 +18,7 @@ class ListingForm(forms.ModelForm):
         model = Listing
         labels = {
             'patrimonio': 'Patrimonio',
+            'idp': 'ID',
             'productnames' : 'Produto',
             'descriptions' : 'Descrição',
             'startingbids' : 'Valor inicial',
@@ -26,6 +27,7 @@ class ListingForm(forms.ModelForm):
         }
         fields = [
             'patrimonio',
+            'idp',
             'productnames',
             'descriptions',
             'startingbids',
