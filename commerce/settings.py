@@ -109,15 +109,16 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-BR'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Sao_Paulo'
 
-USE_I18N = True
+USE_TZ = True
+
+USE_I18N = False
 
 USE_L10N = True
 
-USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -130,3 +131,6 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 
 # Activate Django-Heroku.
 django_heroku.settings(locals())
+
+THOUSAND_SEPARATOR='.',
+USE_THOUSAND_SEPARATOR=True
