@@ -26,6 +26,7 @@ class Category(models.Model):
 
 class Listing(models.Model): 
     patrimonio = models.CharField(null=True, unique=True, max_length=20)
+    idp = models.CharField(null=True, unique=True, max_length=20)
     productnames = models.CharField(max_length=20)
     descriptions = models.TextField(max_length=500)
     startingbids = models.DecimalField(max_digits=15, decimal_places=2)
