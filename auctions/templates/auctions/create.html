@@ -10,10 +10,13 @@
         <div class="form-field col-lg-6">
             {{ form.patrimonio|as_crispy_field }} 
         </div>
-            <div class="form-field col-lg-12">           
+        <div class="form-field col-lg-6">
+            {{ form.idp|as_crispy_field }} 
+        </div>
+            <div class="form-field col-lg-6">           
                  {{ form.productnames|as_crispy_field }}
             </div>
-            <div class="form-field col-lg-6 ">
+            <div class="form-field col-lg-12 ">
                 {{ form.startingbids|as_crispy_field }}
             </div>
             <div class="form col-lg-6 ">
