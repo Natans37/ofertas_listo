@@ -18,17 +18,25 @@ from .models import User, Listing, Bidding, Watchlist, Closebid, Comment, Catego
 from .forms import ListingForm, BiddingForm, CommentForm
 
 
+from django.db.models import Max, Min
+
 def index(request):
     listing = Listing.objects.all()
+    category = request.GET.get('category') # pega a categoria selecionada pelo usuário
+    # adiciona as condições ao queryset
+    if category:
+        listing = listing.filter(category=category)
     try:
         watch = Watchlist.objects.filter(watcher=request.user.username)
         watchcount = len(watch)
     except:
         watchcount = None
+
     return render(request, "auctions/index.html", {
         'object': listing,
         'watchcount': watchcount
     })
+
 
 
 @login_required
