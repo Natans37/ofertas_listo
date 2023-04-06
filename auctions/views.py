@@ -395,37 +395,51 @@ def logout_view(request):
 
 
 def register(request):
+    import random
+import string
+from django.core.mail import send_mail
+from django.conf import settings
+
+
+import random
+import string
+from django.core.mail import send_mail
+from django.conf import settings
+
+def register(request):
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
 
-        # Validação de emails Listo
+        # Validação de emails
         with open('emails.txt', 'r') as f:
             emails_validos = f.read().splitlines()
 
         if email not in emails_validos:
-            return render(request, "auctions/register.html", {"message": "Entre com um usuário válido."})
+            return render(request, "auctions/register.html", {"message": "Entre com um e-mail válido."})
 
-        # Ensure password matches confirmation
-        password = request.POST["password"]
-        confirmation = request.POST["confirmation"]
-        if password != confirmation:
-            return render(request, "auctions/register.html", {
-                "message": "Passwords must match."
-            })
-
-        # Attempt to create new user
+        # Generate and save random password
+        random_password = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
         try:
-            user = User.objects.create_user(username, email, password)
+            user = User.objects.create_user(username, email, random_password)
             user.save()
         except IntegrityError:
-            return render(request, "auctions/register.html", {
-                "message": "Username already taken."
-            })
+            return render(request, "auctions/register.html", {"message": "Usuário já cadastrado."})
+
+        # Send password by email
+        subject = 'Senha gerada aleatoriamente para sua conta'
+        message = f'Sua senha é: {random_password}'
+        email_from = settings.DEFAULT_FROM_EMAIL
+        recipient_list = [email]
+        send_mail(subject, message, email_from, recipient_list)
+
         login(request, user)
-        return HttpResponseRedirect(reverse("index"))
+        return render(request, "auctions/login.html")
     else:
         return render(request, "auctions/register.html")
+
+
+
 
 
 def termos_e_condicoes(request):
