@@ -23,6 +23,8 @@ class ListingForm(forms.ModelForm):
             'descriptions' : 'Descrição',
             'startingbids' : 'Valor inicial',
             'images' : 'Imagem URL',
+            'images2': 'Imagem URL',
+            'images3': 'Imagem URL',
             'category' : 'Categoria'
         }
         fields = [
@@ -32,6 +34,8 @@ class ListingForm(forms.ModelForm):
             'descriptions',
             'startingbids',
             'images',
+            'images2',
+            'images3',
             'category'
         ]
         widgets = {
