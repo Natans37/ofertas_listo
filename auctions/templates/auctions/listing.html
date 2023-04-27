@@ -6,6 +6,7 @@
 <body onload="countdown()">
   <div class="container" style="margin: 100px auto">
 
+
     <div class="row">
 
       <!-- LEFT COLUMN - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -14,8 +15,33 @@
         <!-- IMAGE OF ITEM -->
 
         {% if object.images %}
-        <img class="img-fluid rounded mb-3 mb-md-0" src="{{ object.images }}" style="width:80%;margin:50px;border:10px"
-          class="ml-lg-5 order-1 order-lg-2" alt="No Image Available for {{ object.productnames}}">
+        <div class="carousel-container">
+          <div class="carousel">
+            <img class="img-fluid rounded" src="{{ object.images }}" alt="No Image Available for {{ object.productnames}}">
+            <img class="img-fluid rounded" src="{{ object.images2 }}" alt="No Image Available for {{ object.productnames}}">
+            <img class="img-fluid rounded" src="{{ object.images3 }}" alt="No Image Available for {{ object.productnames}}">
+          </div>
+        </div>
+        <style>
+          .carousel-container {
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  width: 80%;
+  margin: 50px auto;
+}
+
+.carousel {
+  display: flex;
+  scroll-snap-type: x mandatory;
+}
+
+.carousel img {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  scroll-snap-align: center;
+}
+        </style>
         {% else %}
         <img class="img-fluid rounded mb-3 mb-md-0"
           src="https://raw.githubusercontent.com/Natans37/e-commerce-website/254db792501b2711e2f183fbc5092b12d1eadac6/auctions/static/img/Post_para_Instagram_Promo%C3%A7%C3%A3o_de_Aparelhos_Neon__Post_para_Facebook__Paisagem____2_-removebg-preview.png"
