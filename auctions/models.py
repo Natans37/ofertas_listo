@@ -31,6 +31,8 @@ class Listing(models.Model):
     descriptions = models.TextField(max_length=500)
     startingbids = models.DecimalField(max_digits=15, decimal_places=2)
     images = models.URLField(blank=True, null=True)
+    images2 = models.URLField(blank=True, null=True)
+    images3 = models.URLField(blank=True, null=True)
     category = models.CharField(max_length=50, blank=True, null=True, default="")
     lister = models.CharField(max_length=50, blank=True, null=True)
     created = models.DateTimeField(default=now, editable=False)
