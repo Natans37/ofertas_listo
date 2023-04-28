@@ -62,6 +62,8 @@ class Watchlist(models.Model):
 class Closebid(models.Model):
     productnames = models.CharField(max_length=20)
     images = models.URLField(blank=True, null=True)
+    images2 = models.URLField(blank=True, null=True)
+    images3 = models.URLField(blank=True, null=True)
     lister = models.CharField(max_length=64, blank=True, null=True)
     bidder = models.CharField(max_length=64, blank=True, null=True)
     listingid = models.IntegerField()
