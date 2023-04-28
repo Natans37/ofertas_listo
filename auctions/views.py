@@ -231,6 +231,8 @@ def closebid(request, listingid):
         closebid.listingid = listingid
         closebid.productnames = listing.productnames
         closebid.images = listing.images
+        closebid.images2 = listing.images2
+        closebid.images3 = listing.images3
         closebid.category = listing.category
         closebid.patrimonio = listing.patrimonio
         try:
@@ -442,6 +444,8 @@ def closeallbids(request):
             closebid.listingid = listing.id
             closebid.productnames = listing.productnames
             closebid.images = listing.images
+            closebid.images2 = listing.images2
+            closebid.images3 = listing.images3
             closebid.category = listing.category
             closebid.patrimonio = listing.patrimonio
             try:
@@ -481,6 +485,8 @@ def closeallbids(request):
                 closebid.finalbid = listing.startingbids
                 closebid.productnames = listing.productnames
                 closebid.images = listing.images
+                closebid.images2 = listing.images2
+                closebid.images3 = listing.images3
                 closebid.category = listing.category
                 closebid.save()
                 closebidlist = Closebid.objects.get(listingid=listing.id)
