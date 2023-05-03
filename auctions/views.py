@@ -197,7 +197,7 @@ def bid(request, listingid):
                     bidrow.delete()
                     fs.time = now
                 fs = bidform.save(commit=False)
-                fs.bidder = request.user.username
+                fs.bidder = request.user.email
                 fs.listingid = listingid
                 fs.save()
             except:
