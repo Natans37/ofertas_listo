@@ -3,6 +3,8 @@
 {% block body %}
 {% load static %}
 
+
+
 <body onload="countdown()">
   <div class="container" style="margin: 100px auto">
 
@@ -154,56 +156,47 @@
           <dt id="data_final" class="col-sm-4 mb-3 d-block text-muted"> Data Final: </dt>
           <dd class="col-sm-8"> {{ endtime }} </dd>
 
-          <div id="countdown">
-            <div>
-              <span id="days"></span>
+          <div id="countdown" class="d-flex justify-content-center">
+            <div class="text-center">
+              <span id="days" class="d-block mb-2 bg-light rounded-circle p-3"></span>
               <div class="smalltext">Dia(s)</div>
             </div>
-            <div>
-              <span id="hours"></span>
+            <div class="text-center mx-3">
+              <span id="hours" class="d-block mb-2 bg-light rounded-circle p-3"></span>
               <div class="smalltext">Hora(s)</div>
             </div>
-            <div>
-              <span id="minutes"></span>
+            <div class="text-center mx-3">
+              <span id="minutes" class="d-block mb-2 bg-light rounded-circle p-3"></span>
               <div class="smalltext">Min</div>
             </div>
-            <div>
-              <span id="seconds"></span>
+            <div class="text-center">
+              <span id="seconds" class="d-block mb-2 bg-light rounded-circle p-3"></span>
               <div class="smalltext">Seg</div>
             </div>
           </div>
-
+          
           <style>
-            #countdown {
-              font-size: 0.8em;
-              text-align: center;
-              display: flex;
-              justify-content: center;
-            }
-
             #countdown span {
-              display: inline-block;
-              margin: 0 10px;
-              padding: 10px;
-              background-color: #f1f1f1;
-              border-radius: 5px;
+              font-size: 1.2em;
+              font-weight: bold;
             }
-
+          
             #countdown span:first-child {
               background-color: #ffc107;
             }
-
+          
             #countdown span:last-child {
               background-color: #ccc;
             }
-
-            #countdown .time-label {
-              font-size: 0.5em;
+          
+            #countdown .smalltext {
+              font-size: 0.8em;
               text-transform: uppercase;
               color: #666;
               margin-top: 5px;
             }
           </style>
+          
 
           <script>
             function countdown() {
@@ -313,7 +306,7 @@
           {% endif %}
 
         <!-- CLOSE BID-->
-        <br />
+        <br>
         {% if user.username %}
         {% if user.is_superuser %}
         <a href="{% url 'closebid' object.id %}"><button
