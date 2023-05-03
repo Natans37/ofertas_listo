@@ -408,13 +408,8 @@ def register(request):
         if email not in emails_validos:
             return render(request, "auctions/register.html", {"message": "Entre com um usuário válido."})
 
-        # Ensure password matches confirmation
-        password = request.POST["password"]
-        confirmation = request.POST["confirmation"]
-        if password != confirmation:
-            return render(request, "auctions/register.html", {
-                "message": "Passwords must match."
-            })
+        # Generate a random password of length 10 with letters, digits, and punctuation
+        password = ''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=10))
 
         # Attempt to create new user
         try:
@@ -424,8 +419,18 @@ def register(request):
             return render(request, "auctions/register.html", {
                 "message": "Username already taken."
             })
+
+        # Send password to user's email
+        send_mail(
+            'Senha para autenticação',
+            f'Olá {username},\n\nSua senha é: {password}\n\nPor favor, mantenha segura e não compartilhe com ninguém.\n\n Leilão Listo',
+            settings.DEFAULT_FROM_EMAIL,
+            [email],
+            fail_silently=False,
+        )
+
         login(request, user)
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(reverse("login"))
     else:
         return render(request, "auctions/register.html")
 
@@ -433,6 +438,8 @@ def register(request):
 def termos_e_condicoes(request):
     return render(request, "auctions/termos.html")
 
+
+from django.core.mail import send_mail
 
 def closeallbids(request):
     if request.user.is_superuser:
@@ -449,16 +456,13 @@ def closeallbids(request):
             closebid.category = listing.category
             closebid.patrimonio = listing.patrimonio
             try:
-                bid = Bidding.objects.get(
-                    listingid=listing.id, bidprice=listing.startingbids)
+                bid = Bidding.objects.filter(listingid=listing.id).order_by('-bidprice')[0]
                 closebid.bidder = bid.bidder
                 closebid.finalbid = bid.bidprice
-                closebid.save()
-                bid.delete()
             except:
                 closebid.bidder = listing.lister
                 closebid.finalbid = listing.startingbids
-                closebid.save()
+            closebid.save()
             try:
                 if Watchlist.objects.filter(listingid=listing.id):
                     watch = Watchlist.objects.filter(listingid=listing.id)
@@ -471,13 +475,12 @@ def closeallbids(request):
             except:
                 pass
             try:
-                bid = bid.objects.filter(listingid=listing.id)
+                bid = Bid.objects.filter(listingid=listing.id)
                 bid.delete()
             except:
                 pass
             try:
                 closebidlist = Closebid.objects.get(listingid=listing.id)
-                
             except:
                 closebid.lister = listing.lister
                 closebid.bidder = listing.lister
@@ -485,8 +488,6 @@ def closeallbids(request):
                 closebid.finalbid = listing.startingbids
                 closebid.productnames = listing.productnames
                 closebid.images = listing.images
-                closebid.images2 = listing.images2
-                closebid.images3 = listing.images3
                 closebid.category = listing.category
                 closebid.save()
                 closebidlist = Closebid.objects.get(listingid=listing.id)
@@ -531,3 +532,71 @@ def editar_produto(request, id):
 
     context = {'form': form, 'listing': listing}
     return render(request, 'auctions/editar_produto.html', context)
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Sua senha foi alterada com sucesso!')
+            return render(request, 'auctions/index.html')
+        else:
+            messages.error(request, 'Por favor, corrija o(s) erro(s) abaixo.')
+    else:
+        form = PasswordChangeForm(user=request.user)
+
+    return render(request, 'auctions/change_password.html', {'form': form})
+
+
+from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib.auth import get_user_model
+import random
+import string
+
+User = get_user_model()
+
+from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib.auth import get_user_model
+import random
+import string
+
+User = get_user_model()
+
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        try:
+            user = User.objects.get(email=email)
+            new_password = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+            user.set_password(new_password)
+            user.save()
+            send_mail(
+                'Nova senha para o aplicativo',
+                'Sua nova senha é: ' + new_password,
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+            return redirect('password_reset_done')
+        except User.DoesNotExist:
+            error_message = 'Endereço de e-mail não cadastrado.'
+            return render(request, 'auctions/password_reset.html', {'error_message': error_message})
+    return render(request, 'auctions/password_reset.html')
+
+def password_reset_done(request):
+    return render(request, 'auctions/password_reset_done.html')
+
+
+
+
+
