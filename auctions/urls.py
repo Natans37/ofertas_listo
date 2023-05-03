@@ -25,5 +25,7 @@ urlpatterns = [
     path("closeallbids/", views.closeallbids, name="closeallbids"),
     path("password_reset/", views.password_reset, name="password_reset"),
     path('produto/<int:id>/editar', views.editar_produto, name='editar_produto'),
-
+    path('change_password/', views.change_password, name='change_password'),
+    path('forgot_password/', views.forgot_password, name='forgot_password'),
+    path('password_reset_done/', views.password_reset_done, name='password_reset_done'),
 ]
