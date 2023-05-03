@@ -10,6 +10,14 @@
             <div class="card-body" style="padding-top: 60px">
 
             <p class="login-card-description">Registrar</p>
+            <p class="login-card-footer-text" style="margin: 10px; color: gray;">Ao se registrar, verifique sua caixa de entrada do e-mail para obter a senha de sua conta.</p>
+
+            <style>
+              .login-card-footer-text:hover {
+                color: blue;
+                transition: color 0.3s ease;
+              }
+            </style>
 
                 {% if message %}
                     <div>{{ message }}</div>
