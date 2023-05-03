@@ -7,12 +7,12 @@
         <ul>
             <!-- <li><b>Listed by: </b>{{closebidlist.lister}}</li> -->
             {% if closebidlist.bidder == user.username %}
-            <li><b>Ganhador: </b> {{closebidlist.bidder}} (Dono da licitação) </li>
+            <li><b>Ganhador: </b> {{closebidlist.bidder}} (Sem Ganhador) </li>
             {% else %}
             <li><b>Ganhador: </b>{{closebidlist.bidder}}</li>
             {% endif %}
             <li><b>Lance final: $</b>{{closebidlist.finalbid}}</li>
-            <li><b>E-mail: $</b>{{closebidlist.email}}</li>
+            <!--<li><b>E-mail: $</b>{{closebidlist.user.email}}</li> -->
         </ul>
     </div>
 
