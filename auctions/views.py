@@ -154,13 +154,13 @@ def removewatch(request, id):
 def watchlist(request):
     try:
         watchlist = Watchlist.objects.filter(watcher=request.user.username)
-        closebid = Closebid.objects.filter(bidder=request.user.username)
+        closebid = Closebid.objects.filter(bidder=request.user.email)
         # count how many rows in table Watchlist using len()
         watchcount = len(watchlist)
     except:
         watchcount = None
     try:
-        bidwincount = Closebid.objects.filter(bidder=request.user.username)
+        bidwincount = Closebid.objects.filter(bidder=request.user.email)
         bidwincount = len(bidwincount)
     except:
         binwincoun = None
