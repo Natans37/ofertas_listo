@@ -23,6 +23,8 @@
                                 <option value="Monitores">Monitores</option>
                                 <option value="Notebooks">Notebooks</option>
                                 <option value="Impressoras">Impressoras</option>
+                                <option value="Desktops">Desktops</option>
+                                <option value="Mouses e teclados">Mouses & Teclados</option>
                                 {% for category in categories %}
                                     <option value="{{ category.id }}" {% if category.id == selected_category %} selected {% endif %}>{{ category.name }}</option>
                                 {% endfor %}
