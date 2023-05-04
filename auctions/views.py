@@ -463,6 +463,14 @@ def closeallbids(request):
                 closebid.bidder = listing.lister
                 closebid.finalbid = listing.startingbids
             closebid.save()
+            # construa a mensagem de e-mail
+            subject = f'Você ganhou o leilão para o {listing.productnames}!'
+            message = f'Parabéns! Você ganhou o leilão para o {listing.productnames}.'
+            from_email = 'servicedesk@soulisto.com.br'
+            recipient_list = [bid.bidder]
+
+            # envie o e-mail usando o módulo send_mail do Django
+            send_mail(subject, message, from_email, recipient_list)
             try:
                 if Watchlist.objects.filter(listingid=listing.id):
                     watch = Watchlist.objects.filter(listingid=listing.id)
