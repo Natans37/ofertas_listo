@@ -52,7 +52,7 @@ def createlisting(request):
         if form.is_valid():
             now = datetime.now()  # save date created with current timezone
             fs = form.save(commit=False)
-            fs.lister = request.user  # save info not listed at forms.py
+            fs.lister = request.user.email  # save info not listed at forms.py
             fs.created = now
             fs.save()
         return HttpResponseRedirect(reverse('index'))
@@ -463,14 +463,15 @@ def closeallbids(request):
                 closebid.bidder = listing.lister
                 closebid.finalbid = listing.startingbids
             closebid.save()
-            # construa a mensagem de e-mail
-            subject = f'Você ganhou o leilão para o {listing.productnames}!'
-            message = f'Parabéns! Você ganhou o leilão para o {listing.productnames}.'
-            from_email = 'servicedesk@soulisto.com.br'
-            recipient_list = [bid.bidder]
+            if closebid.bidder != closebid.lister:
+                # construa a mensagem de e-mail
+                subject = f'Você ganhou o leilão para o {listing.productnames}!'
+                message = f'Parabéns! Você ganhou o leilão para o {listing.productnames} por R$ {closebid.finalbid}, entre em contato com {closebid.lister}'
+                from_email = 'servicedesk@soulisto.com.br'
+                recipient_list = [bid.bidder]
 
-            # envie o e-mail usando o módulo send_mail do Django
-            send_mail(subject, message, from_email, recipient_list)
+                # envie o e-mail usando o módulo send_mail do Django
+                send_mail(subject, message, from_email, recipient_list)
             try:
                 if Watchlist.objects.filter(listingid=listing.id):
                     watch = Watchlist.objects.filter(listingid=listing.id)
