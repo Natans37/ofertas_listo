@@ -241,6 +241,15 @@ def closebid(request, listingid):
             closebid.bidder = bid.bidder
             closebid.finalbid = bid.bidprice
             closebid.save()
+            if closebid.bidder != closebid.lister:
+                # construa a mensagem de e-mail
+                subject = f'Você ganhou o leilão para o {listing.productnames}!'
+                message = f'Parabéns! Você ganhou o leilão para o {listing.productnames} por R$ {closebid.finalbid}, entre em contato com {closebid.lister}'
+                from_email = 'servicedesk@soulisto.com.br'
+                recipient_list = [bid.bidder]
+
+                # envie o e-mail usando o módulo send_mail do Django
+                send_mail(subject, message, from_email, recipient_list)
             # bid.delete()
         except:
             closebid.bidder = listing.lister
