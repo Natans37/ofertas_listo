@@ -45,11 +45,48 @@
                   
                   <input class="btn btn-secondary btn-block mb-4 login-card" type="submit" value="Registrar">
                   <p class="login-card-footer-text" style="margin: 10px;">Ao se registrar, você concorda com nossos <a href="{% url 'termos' %}" target="_blank" id="termos-link">termos e condições</a>.</p>
-                  <label>
+                 
+                  <label class="checkbox-label">
                     <input type="checkbox" name="ciente" value="true" required>
-                    Estou ciente
+                    <span class="checkbox-custom"></span>
+                    <span class="label-text">Li, e aceito os termos e condições</span>
                   </label>
+                  
                 </form>
+
+                <style>
+                  /* ocultar o checkbox padrão */
+input[type=checkbox] {
+  display: none;
+}
+
+/* estilo do checkbox personalizado */
+.checkbox-custom {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+/* estilo do checkbox personalizado quando marcado */
+input[type=checkbox]:checked + .checkbox-custom:before {
+  content: '\2713';
+  display: block;
+  text-align: center;
+  line-height: 18px;
+  color: #fff;
+  background-color: #333;
+}
+
+/* estilo do texto associado */
+.label-text {
+  vertical-align: middle;
+}
+
+                </style>
 
                 <!-- Adicione esse elemento div vazio no final da página -->
 <div id="termos-popup"></div>
@@ -120,7 +157,7 @@
 			<div class="row align-items-center">
 				<div class="col-sm-2">
 					<div class="pl-0 logo">
-						<img src="https://www.soulisto.com.br/logo-listo-fintech.png" alt="Logo Listo" width="250" height="250">
+						<img src="https://github.com/Natans37/e-commerce-website/blob/master/auctions/static/img/Logo%20simples.png?raw=true" alt="Logo Listo" width="180" height="100">
 					</div>
 				</div>
 			</div>
@@ -131,7 +168,6 @@
 	<div class="container py-5">
 		<div class="row">
 			<div class="col-md-12 main-text">
-
 				<p>Este termo contém as condições gerais para a venda de equipamentos de informática (“Equipamento(s)”) da <b>LISTO COMÉRCIO E DISTRIBUIÇÃO DE EQUIPAMENTOS LTDA</b>, sociedade limitada, com sede na Avenida Brigadeiro Faria Lima, nº1663, 8º andar, sala 3, Jardim Paulistano, São Paulo- SP, CEP 01452-001, inscrita no CNPJ sob o nº 31.739.211/0001-74 (“Listo”) aos colaboradores interessados do Grupo Listo (“Comprador”) em condições especiais, considerando serem usados e sem qualquer garantia, os colaboradores têm interesse em adquirir equipamentos nessas condições especiais, cientes de que se tratam de equipamentos usados e sem qualquer garantia.</p>
 				<p>Os Equipamentos serão disponibilizados através de link específico na intranet da Listo (“Conecta”), sendo que cada Equipamento possuirá número, foto, controle do ativo (se houver), descrição geral, marca, modelo, estado (funcionando ou com defeito) e valor de lance mínimo. </p>
 				<p>Neste sentido, o possível Comprador poderá dar quantos lances desejar de compra para cada Equipamento, no entanto somente o maior lance será considerado para determinar o Colaborador que arremeteu o Equipamento que será divulgado toda sexta-feira.</p>
@@ -154,11 +190,21 @@
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
 
             </div>
-            <footer>
-       
-       <img src="https://github.com/Natans37/e-commerce-website/blob/master/auctions/static/img/imagem.png?raw=true" width="500" height="80" alt="Descrição da imagem"> 
-       
-        </footer>
+            <footer class="footer">
+   <img src="https://github.com/Natans37/e-commerce-website/blob/master/auctions/static/img/logo_icon.png?raw=true" width="100" height="50" alt="Descrição da imagem do logo" style="float: left;">
+   <br><p>Listo &copy; Copyright 2023. Todos os direitos reservados.</p>
+</footer>
+
+<style> 
+  .footer {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+}
+</style>
+
+
           </div>
         </div>
       </div>
