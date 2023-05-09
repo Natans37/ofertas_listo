@@ -1,24 +1,28 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseBadRequest
-from django.shortcuts import render, redirect
 from django.urls import reverse
 from django import forms
 from django.contrib.auth.decorators import login_required
 from django.contrib.sessions.models import Session
 from datetime import datetime
 from django.utils.timezone import now
-import re
 from django.contrib.auth.forms import PasswordResetForm
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Listing
-from .forms import ListingForm
 from .models import User, Listing, Bidding, Watchlist, Closebid, Comment, Category
 from .forms import ListingForm, BiddingForm, CommentForm
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+from django.conf import settings
+from django.contrib.auth import get_user_model
+import random
+import string
 
 
-from django.db.models import Max, Min
+User = get_user_model()
 
 def index(request):
     listing = Listing.objects.all()
@@ -36,7 +40,6 @@ def index(request):
         'object': listing,
         'watchcount': watchcount
     })
-
 
 
 @login_required
@@ -154,18 +157,23 @@ def removewatch(request, id):
 def watchlist(request):
     try:
         watchlist = Watchlist.objects.filter(watcher=request.user.username)
+        mybids = Bidding.objects.filter(bidder=request.user.email)
         closebid = Closebid.objects.filter(bidder=request.user.email)
         # count how many rows in table Watchlist using len()
         watchcount = len(watchlist)
+        mybidcount = len(mybids)
     except:
         watchcount = None
+        mybidcount = None
     try:
         bidwincount = Closebid.objects.filter(bidder=request.user.email)
         bidwincount = len(bidwincount)
     except:
-        binwincoun = None
+        binwincount = None
     try:
         if Watchlist.objects.get(listingid=listingid):
+            closed = True
+        if Bidding.objects.get(listingid=listingid):
             closed = True
         else:
             closed = False
@@ -176,7 +184,9 @@ def watchlist(request):
         "watchcount": watchcount,
         "closedbid": closebid,
         "closed": closed,
-        "bidwincount": bidwincount
+        "bidwincount": bidwincount,
+        'mybids': mybids,
+        "mybidcount": mybidcount,
     })
 
 
@@ -184,6 +194,16 @@ def watchlist(request):
 def bid(request, listingid):
     current = Listing.objects.get(id=listingid)
     current = current.startingbids
+    
+    productnames = Listing.objects.get(id=listingid)
+    productnames = productnames.productnames
+
+    descriptions = Listing.objects.get(id=listingid)
+    descriptions = descriptions.descriptions
+    
+    images = Listing.objects.get(id=listingid)
+    images = images.images
+        
     bidform = BiddingForm(request.POST or None)
     if request.user.username:
         bid = float(request.POST.get("bidprice"))
@@ -199,12 +219,26 @@ def bid(request, listingid):
                 fs = bidform.save(commit=False)
                 fs.bidder = request.user.email
                 fs.listingid = listingid
+                fs.productnames = productnames
+                fs.descriptions = descriptions
+                fs.startingbids = current
+                fs.images = images
                 fs.save()
+                
+                 # construa a mensagem de e-mail
+                subject = f'Você deu um lance para o {listing.productnames}!'
+                message = f'Você deu um lance para o {listing.productnames} por R$ {fs.bidprice}.'
+                from_email = 'servicedesk@soulisto.com.br'
+                recipient_list = [fs.bidder]
+
+                # envie o e-mail usando o módulo send_mail do Django
+                send_mail(subject, message, from_email, recipient_list) 
+                
             except:
                 fs = bidform.save(commit=False)
                 fs.bidder = request.user
                 fs.listingid = listingid
-                fs.save()
+                fs.save() 
             response = redirect('listingpage', id=listingid)
             response.set_cookie(
                 'success', 'Lance efetuado com sucesso!.', max_age=1)
@@ -417,8 +451,8 @@ def register(request):
         if email not in emails_validos:
             return render(request, "auctions/register.html", {"message": "Entre com um usuário válido."})
 
-        # Generate a random password of length 10 with letters, digits, and punctuation
-        password = ''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=10))
+        # Generate a random password of length 10 with letters, digits.
+        password = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
 
         # Attempt to create new user
         try:
@@ -432,14 +466,14 @@ def register(request):
         # Send password to user's email
         send_mail(
             'Senha para autenticação',
-            f'Olá {username},\n\nSua senha é: {password}\n\nPor favor, mantenha segura e não compartilhe com ninguém.\n\n Leilão Listo',
+            f'Olá {username},\n\nSua senha é: {password}\n\nPor favor, mantenha segura e não compartilhe com ninguém.\n\n Leilão Listo\n\n\n\n\n',
             settings.DEFAULT_FROM_EMAIL,
             [email],
             fail_silently=False,
+            html_message= f'Olá {username},<br> <br> Sua senha é: <strong> {password} </strong> <br> <br> Por favor, mantenha segura e não compartilhe com ninguém. <br> <br> Leilão Listo <br> <br> <br> <br> <br>'
         )
 
-        login(request, user)
-        return HttpResponseRedirect(reverse("login"))
+        return render(request, "auctions/password_reset_done.html")
     else:
         return render(request, "auctions/register.html")
 
@@ -447,8 +481,6 @@ def register(request):
 def termos_e_condicoes(request):
     return render(request, "auctions/termos.html")
 
-
-from django.core.mail import send_mail
 
 def closeallbids(request):
     if request.user.is_superuser:
@@ -551,10 +583,6 @@ def editar_produto(request, id):
     context = {'form': form, 'listing': listing}
     return render(request, 'auctions/editar_produto.html', context)
 
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.forms import PasswordChangeForm
 
 def change_password(request):
     if request.method == 'POST':
@@ -572,24 +600,6 @@ def change_password(request):
     return render(request, 'auctions/change_password.html', {'form': form})
 
 
-from django.shortcuts import render, redirect
-from django.core.mail import send_mail
-from django.conf import settings
-from django.contrib.auth import get_user_model
-import random
-import string
-
-User = get_user_model()
-
-from django.shortcuts import render, redirect
-from django.core.mail import send_mail
-from django.conf import settings
-from django.contrib.auth import get_user_model
-import random
-import string
-
-User = get_user_model()
-
 def forgot_password(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -599,17 +609,20 @@ def forgot_password(request):
             user.set_password(new_password)
             user.save()
             send_mail(
-                'Nova senha para o aplicativo',
-                'Sua nova senha é: ' + new_password,
-                settings.DEFAULT_FROM_EMAIL,
-                [email],
-                fail_silently=False,
+            'Nova senha para o aplicativo',
+            'Sua nova senha é: <strong>' + new_password + '</strong>',
+            settings.DEFAULT_FROM_EMAIL,
+            [email],
+            fail_silently=False,
+            html_message='Sua nova senha é: <strong>' + new_password + '</strong> <br> <br> <br>'
             )
+
             return redirect('password_reset_done')
         except User.DoesNotExist:
             error_message = 'Endereço de e-mail não cadastrado.'
             return render(request, 'auctions/password_reset.html', {'error_message': error_message})
     return render(request, 'auctions/password_reset.html')
+
 
 def password_reset_done(request):
     return render(request, 'auctions/password_reset_done.html')
