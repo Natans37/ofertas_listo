@@ -227,7 +227,7 @@ def bid(request, listingid):
                 
                  # construa a mensagem de e-mail
                 subject = f'Você deu um lance para o {listing.productnames}!'
-                message = f'Você deu um lance para o {listing.productnames} por R$ {fs.bidprice}.'
+                message = f'Você deu um lance para o {listing.productnames} \n\n No valor de R$ {fs.bidprice}.\n \n \n \n'
                 from_email = 'servicedesk@soulisto.com.br'
                 recipient_list = [fs.bidder]
 
