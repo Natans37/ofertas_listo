@@ -14,7 +14,7 @@
 <!-- TOGGLE TO CLOSED BIDS WON -->
 <p><a data-toggle="collapse" href="#collapsewonbid" role="button" aria-expanded="false" aria-controls="collapsewonbid">
     <div class="alert alert-danger container" style="margin-top: 5%">
-      <strong> Itens ganhos ({{ bidwincount }}) </strong>
+      <strong> Itens Ganhos ({{ bidwincount }}) </strong>
     </div>
   </a></p>
 
@@ -71,7 +71,7 @@
 </p>
 
 <!-- START OF COLLAPSIBLE PART -->
-<div class="panel-collapse collapse show" id="collapsebid">
+<div class="panel-collapse collapse" id="collapsebid">
 
   <!-- CONTAINER FOR WATCHLIST -->
   <div class="container">
@@ -128,7 +128,7 @@
 </p>
 
 <!-- START OF COLLAPSIBLE PART -->
-<div class="panel-collapse collapse show" id="collapsebid2">
+<div class="panel-collapse collapse" id="collapsebid2">
 
   <!-- CONTAINER FOR MYBIDS -->
   <div class="container">
@@ -154,10 +154,12 @@
             </a>
             <div class="card-text text-black-50">
               <br>
+              Código do Produto: {{mybids.listingid}}
+              <br>
               Preço anterior: R$ {{ mybids.startingbids }}
-              <br><br>
+              <br>
               Seu lance: R$ {{ mybids.bidprice }}
-              <br><br>
+              <br>
               Data do lance: {{ mybids.time }}
             </div>
           </div>
@@ -165,12 +167,9 @@
       </div>
 
       {% empty %}
-      <center>
-        <img style="width: 30%; margin-top: -8% " src="https://i.ibb.co/6vbhKgQ/Pngtree-it-s-in-the-3845898.png"
-          alt="Pngtree-it-s-in-the-3845898" border="0">
-        <h5> Nenhum item salvo. </h5>
-      </center>
+      <h7> Você não deu nenhum lance. <a href="{% url 'index' %}"> Comece agora! </a> </h7>
       {% endfor %}
+
       <!-- END OF LOOP TO SHOW MYBIDS -->
 
     </div>
