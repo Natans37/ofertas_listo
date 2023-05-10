@@ -72,7 +72,7 @@ def listingpage(request, id):
     comment = Comment.objects.filter(listingid=id)
     try:
         cform = CommentForm(request.POST or None)
-        bidform = BiddingForm(request.POST or None)
+        bidform = BiddingForm(request.POST or None, initial={'bidprice': listing.startingbids+5})
     except:
         return redirect('index')
     if request.user.username:
