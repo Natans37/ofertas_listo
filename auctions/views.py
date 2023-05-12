@@ -26,10 +26,15 @@ User = get_user_model()
 
 def index(request):
     listing = Listing.objects.all()
-    category = request.GET.get('category') # pega a categoria selecionada pelo usuário
-    # adiciona as condições ao queryset
+    category = request.GET.get('category')
+    search_query = request.GET.get('q')
     if category:
         listing = listing.filter(category=category)
+    if search_query:
+        if search_query.isdigit():
+            listing = listing.filter(id=search_query)
+        else:
+            listing = listing.filter(title__icontains=search_query)
     try:
         watch = Watchlist.objects.filter(watcher=request.user.username)
         watchcount = len(watch)
@@ -38,8 +43,11 @@ def index(request):
 
     return render(request, "auctions/index.html", {
         'object': listing,
-        'watchcount': watchcount
+        'watchcount': watchcount,
+        'search_query': search_query
     })
+
+
 
 
 @login_required
@@ -169,7 +177,7 @@ def watchlist(request):
         bidwincount = Closebid.objects.filter(bidder=request.user.email)
         bidwincount = len(bidwincount)
     except:
-        binwincount = None
+        bidwincount = None
     try:
         if Watchlist.objects.get(listingid=listingid):
             closed = True
@@ -278,7 +286,7 @@ def closebid(request, listingid):
             if closebid.bidder != closebid.lister:
                 # construa a mensagem de e-mail
                 subject = f'Você ganhou o leilão para o {listing.productnames}!'
-                message = f'Parabéns! Você ganhou o leilão para o {listing.productnames} por R$ {closebid.finalbid}, entre em contato com {closebid.lister}'
+                message = f'Parabéns! Você ganhou o leilão para o {listing.productnames} por R$ {closebid.finalbid}, entre em contato com {closebid.lister}\n\n\n'
                 from_email = 'servicedesk@soulisto.com.br'
                 recipient_list = [bid.bidder]
 
@@ -507,7 +515,7 @@ def closeallbids(request):
             if closebid.bidder != closebid.lister:
                 # construa a mensagem de e-mail
                 subject = f'Você ganhou o leilão para o {listing.productnames}!'
-                message = f'Parabéns! Você ganhou o leilão para o {listing.productnames} por R$ {closebid.finalbid}, entre em contato com {closebid.lister}'
+                message = f'Parabéns! Você ganhou o leilão para o {listing.productnames} por R$ {closebid.finalbid}, entre em contato com {closebid.lister}\n\n\n'
                 from_email = 'servicedesk@soulisto.com.br'
                 recipient_list = [bid.bidder]
 
