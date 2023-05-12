@@ -24,7 +24,7 @@
                                 <option value="notebooks">Notebooks</option>
                                 <option value="impressoras">Impressoras</option>
                                 <option value="desktops">Desktops</option>
-                                <option value="mouses e teclados">Mouses & Teclados</option>
+                                <option value="mouses-teclados">Mouses & Teclados</option>
                                 {% for category in categories %}
                                     <option value="{{ category.id }}" {% if category.id == selected_category %} selected {% endif %}>{{ category.name }}</option>
                                 {% endfor %}
@@ -35,6 +35,20 @@
                         </div>
                     </div>
                 </form>
+                <form action="{% url 'index' %}" method="get" class="form-search">
+                    <div class="form-group">
+                        <label for="search_query">Pesquisar ID:</label>
+                        <div class="input-group">
+                            <input type="text" name="q" id="search_query" class="form-control" required>
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-primary">Pesquisar</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                
+                
+                
             </div>
         </div>
     </div>
