@@ -145,3 +145,10 @@ EMAIL_USE_SSL = False
 EMAIL_HOST_USER = 'gabriel.reis@soulisto.com.br'
 EMAIL_HOST_PASSWORD = 'jmpqqyscdbsfsxrb'
 DEFAULT_FROM_EMAIL = 'servicedesk@soulisto.com.br'
+
+
+# Configuração para definir o tempo limite de inatividade em segundos (300 segundos = 5 minutos)
+SESSION_COOKIE_AGE = 600
+
+# Configuração para definir a URL para redirecionar após o logout por inatividade
+SESSION_EXPIRE_REDIRECT_URL = 'http://10.11.2.98:8000/login'
