@@ -1,2 +1,2 @@
 release: python manage.py migrate
-web: gunicorn Project2.wsgi
+web: gunicorn commerce.wsgi
