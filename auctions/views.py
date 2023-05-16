@@ -569,9 +569,17 @@ def password_reset_done(request):
     return render(request, 'auctions/password_reset_done.html')
 
 
+from django.http import JsonResponse
+
+@login_required
 def editar_produto(request, id):
     # busca o objeto Listing a ser editado
     listing = get_object_or_404(Listing, id=id)
+
+    # verifica se o usuário é o mesmo que criou o produto
+    #if request.user.email != listing.lister:
+        # usuário não tem permissão para editar este produto
+        #return redirect('listingpage', id=id)
 
     if request.method == 'POST':
         # cria uma instância do ListingForm, preenchido com os dados do POST
@@ -582,7 +590,6 @@ def editar_produto(request, id):
             form.save()
             # redireciona o usuário para a página de detalhes do produto atualizado
             return redirect('listingpage', id=id)
-            
 
     else:
         # exibe o formulário de edição de produto preenchido com os dados atuais do produto
@@ -590,6 +597,8 @@ def editar_produto(request, id):
 
     context = {'form': form, 'listing': listing}
     return render(request, 'auctions/editar_produto.html', context)
+
+
 
 
 def change_password(request):
