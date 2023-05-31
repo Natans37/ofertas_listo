@@ -234,8 +234,8 @@ def bid(request, listingid):
                 fs.save()
                 
                  # construa a mensagem de e-mail
-                subject = f'Você deu um lance para o {listing.productnames}!'
-                message = f'Você deu um lance para o {listing.productnames} \n\n No valor de R$ {fs.bidprice}.\n \n \n \n'
+                subject = f'Você deu um lance para o produto {listing.productnames}!'
+                message = f'Você deu um lance para o {listing.productnames}. \nNo valor de R$ {fs.bidprice} \nPatrimônio: {listing.patrimonio} \nAgora é só acompanhar e aguardar a contagem regressiva! \n \n \n'
                 from_email = 'servicedesk@soulisto.com.br'
                 recipient_list = [fs.bidder]
 
@@ -286,7 +286,7 @@ def closebid(request, listingid):
             if closebid.bidder != closebid.lister:
                 # construa a mensagem de e-mail
                 subject = f'Você ganhou o leilão para o {listing.productnames}!'
-                message = f'Parabéns! Você ganhou o leilão para o {listing.productnames} por R$ {closebid.finalbid}, entre em contato com {closebid.lister}\n\n\n'
+                message = f'Parabéns! Você ganhou o leilão para o {listing.productnames}. \nPatrimônio: {listing.patrimonio} \nPor R$ {closebid.finalbid} \nEntre em contato com a equipe de TI ou pelo email servicedesk@soulisto.com.br para receber as orientações.\n\n\n'
                 from_email = 'servicedesk@soulisto.com.br'
                 recipient_list = [bid.bidder]
 
@@ -515,7 +515,7 @@ def closeallbids(request):
             if closebid.bidder != closebid.lister:
                 # construa a mensagem de e-mail
                 subject = f'Você ganhou o leilão para o {listing.productnames}!'
-                message = f'Parabéns! Você ganhou o leilão para o {listing.productnames} por R$ {closebid.finalbid}, entre em contato com {closebid.lister}\n\n\n'
+                message = f'Parabéns! Você ganhou o leilão para o {listing.productnames}. \nPatrimônio: {listing.patrimonio} \nPor R$ {closebid.finalbid} \nEntre em contato com a equipe de TI ou pelo email servicedesk@soulisto.com.br para receber as orientações.\n\n\n'
                 from_email = 'servicedesk@soulisto.com.br'
                 recipient_list = [bid.bidder]
 
