@@ -244,7 +244,7 @@ def bid(request, listingid):
                 
             except:
                 fs = bidform.save(commit=False)
-                fs.bidder = request.user
+                fs.bidder = request.user.email
                 fs.listingid = listingid
                 fs.save() 
             response = redirect('listingpage', id=listingid)
