@@ -46,6 +46,27 @@
     </div>
   </div>
         <hr style="margin: 5% auto 10% auto">
+        <script>
+
+            (function() {
+
+                // Verificar a cada 5 minutos se a sessão expirou
+
+                setInterval(function() {
+
+                    if (!document.cookie.includes('sessionid')) {
+
+                        // A sessão expirou, redirecionar para a página de login
+
+                        window.location.href = 'http://listoofertas:8000/login';
+
+                    }
+
+                }, 5 * 60 * 1000); // 5 minutos em milissegundos
+
+            })();
+
+            </script>
   </div>
   <!-- END OF CONATINER FOR CLOSED ITEMS WON -->
 
