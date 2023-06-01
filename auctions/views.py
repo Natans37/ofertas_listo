@@ -246,6 +246,10 @@ def bid(request, listingid):
                 fs = bidform.save(commit=False)
                 fs.bidder = request.user.email
                 fs.listingid = listingid
+                fs.productnames = productnames
+                fs.descriptions = descriptions
+                fs.startingbids = current
+                fs.images = images
                 fs.save() 
             response = redirect('listingpage', id=listingid)
             response.set_cookie(
