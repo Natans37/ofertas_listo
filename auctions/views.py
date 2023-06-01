@@ -235,7 +235,7 @@ def bid(request, listingid):
                 
                  # construa a mensagem de e-mail
                 subject = f'Você deu um lance para o produto {listing.productnames}!'
-                message = f'Você deu um lance para o {listing.productnames}. \nNo valor de R$ {fs.bidprice} \nPatrimônio: {listing.patrimonio} \nAgora é só acompanhar e aguardar a contagem regressiva! \n \n \n'
+                message = f'Você deu um lance para o {listing.productnames}. \nNo valor de R$ {fs.bidprice} \nPatrimônio/IDP {listing.patrimonio}/{listing.idp} \nAgora é só acompanhar e aguardar a contagem regressiva! \n \n \n'
                 from_email = 'servicedesk@soulisto.com.br'
                 recipient_list = [fs.bidder]
 
@@ -290,7 +290,7 @@ def closebid(request, listingid):
             if closebid.bidder != closebid.lister:
                 # construa a mensagem de e-mail
                 subject = f'Você ganhou o leilão para o {listing.productnames}!'
-                message = f'Parabéns! Você ganhou o leilão para o {listing.productnames}. \nPatrimônio: {listing.patrimonio} \nPor R$ {closebid.finalbid} \nEntre em contato com a equipe de TI ou pelo email servicedesk@soulisto.com.br para receber as orientações.\n\n\n'
+                message = f'Parabéns! Você ganhou o leilão para o {listing.productnames} | Patrimônio/IDP {closebid.patrimonio}/{listing.idp}, por R$ {closebid.finalbid}.\n\n Para darmos andamento na sua aquisição, faremos o contrato de Compra e Venda e Recibo de Entrega. Para isso, pedimos que envie os dados a seguir: \n\n- Nome Completo:\n\n- Nº RG:\n\n- Nº CPF: \n\n- Nacionalidade: \n\n- Estado Civil:\n\n- Endereço: \n\n Por gentileza, envie os dados para edna.silva@soulisto.com.br, natanael.sousa@soulisto.com.br, entraremos em contato para orientar quanto ao pagamento e retirada. \n\n\n\nAguardamos você! \n\n\n\n\n\n\n\n\n' 
                 from_email = 'servicedesk@soulisto.com.br'
                 recipient_list = [bid.bidder]
 
@@ -519,7 +519,7 @@ def closeallbids(request):
             if closebid.bidder != closebid.lister:
                 # construa a mensagem de e-mail
                 subject = f'Você ganhou o leilão para o {listing.productnames}!'
-                message = f'Parabéns! Você ganhou o leilão para o {listing.productnames}. \nPatrimônio: {listing.patrimonio} \nPor R$ {closebid.finalbid} \nEntre em contato com a equipe de TI ou pelo email servicedesk@soulisto.com.br para receber as orientações.\n\n\n'
+                message = f'Parabéns! Você ganhou o leilão para o {listing.productnames} | Patrimônio/IDP {closebid.patrimonio}/{listing.idp}, por R$ {closebid.finalbid}.\n\n Para darmos andamento na sua aquisição, faremos o contrato de Compra e Venda e Recibo de Entrega. Para isso, pedimos que envie os dados a seguir: \n\n- Nome Completo:\n\n- Nº RG:\n\n- Nº CPF: \n\n- Nacionalidade: \n\n- Estado Civil:\n\n- Endereço: \n\n Por gentileza, envie os dados para edna.silva@soulisto.com.br, natanael.sousa@soulisto.com.br, entraremos em contato para orientar quanto ao pagamento e retirada. \n\n\n\nAguardamos você! \n\n\n\n\n\n\n\n\n'
                 from_email = 'servicedesk@soulisto.com.br'
                 recipient_list = [bid.bidder]
 
