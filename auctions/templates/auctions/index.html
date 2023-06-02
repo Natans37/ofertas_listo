@@ -39,7 +39,7 @@
                     <div class="form-group">
                         <label for="search_query">Pesquisar ID:</label>
                         <div class="input-group">
-                            <input type="text" name="q" id="search_query" class="form-control" required>
+                            <input type="number" name="q" id="search_query" class="form-control" required>
                             <div class="input-group-append">
                                 <button type="submit" class="btn btn-primary">Pesquisar</button>
                             </div>
@@ -104,9 +104,14 @@
                     <center>
                         <h5 class="card-title"> {{ object.productnames }} </h5>
                     </center>
+                    {% if user.username %}
                     <p class="card-text" style="margin: 5px"> <span style="font-size:small;"> <b>Lance atual:</b> </span> <span
                             style="color: green; font-weight: bold"> R$ {{ object.startingbids }} </span>
-                        <br /> <span
+                        <br />
+
+                    {% else %}
+                    {% endif %}   
+                         <span
                             style="font-size: small; display: block; text-overflow: ellipsis; word-wrap: break-word; overflow: hidden; max-height: 7.2em; line-height: 1.8em; margin-top: 10px">
                             <b>Categoria:</b> {{ object.category }} </span>
                         <span
