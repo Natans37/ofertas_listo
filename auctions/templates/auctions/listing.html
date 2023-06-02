@@ -134,9 +134,13 @@
         <!-- PRODUCT DETAILS -->
         <dl class="row">
 
-
+          {% if user.username %}
           <dt class="col-sm-4 mb-3 d-block text-muted">Preço atual:</dt>
           <dd class="col-sm-8"> <strong>R$ {{ object.startingbids }}</strong> </dd>
+          {% else %}
+          <dt class="col-sm-4 mb-3 d-block text-muted">Preço atual:</dt>
+          <dd class="col-sm-8"> <strong>Entre para ver o preço.</strong> </dd>
+          {% endif %}
 
           <dt class="col-sm-4 mb-3 d-block text-muted">Número de lances:</dt>
           {% if bidcount is 0 %} <dd class="col-sm-8"> Sem lances ainda </dd>
@@ -144,13 +148,15 @@
 
           <dt class="col-sm-4 mb-3 d-block text-muted">Categoria:</dt>
           <dd class="col-sm-8"> {{ object.category }} </dd>
-
+          {% if user.username %}
           <dt class="col-sm-4 mb-3 d-block text-muted">Patrimônio / Idp:</dt>
           <dd class="col-sm-8"> {{ object.patrimonio }} / {{ object.idp }} </dd>
 
           <dt class="col-sm-4 mb-3 d-block text-muted">ID:</dt>
           <dd class="col-sm-8"> {{ object.id }} </dd>
+          {% else %}
 
+          {% endif %}
           <!--<dt class="col-sm-4 mb-3 d-block text-muted">Date Posted:</dt>
           <dd class="col-sm-8"> {{ object.created }} </dd>!-->
 
