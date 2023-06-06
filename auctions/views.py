@@ -236,7 +236,7 @@ def bid(request, listingid):
                  # construa a mensagem de e-mail
                 subject = f'Você deu um lance para o produto {listing.productnames}!'
                 message = f'Você deu um lance para o {listing.productnames}. \nNo valor de R$ {fs.bidprice} \nPatrimônio/IDP {listing.patrimonio}/{listing.idp} \n\n\nAgora é só acompanhar e aguardar a contagem regressiva! \n\nBoa sorte! \n\n\n\n\n\n'
-                from_email = 'servicedesk@soulisto.com.br'
+                from_email = 'ofertaslisto@soulisto.com.br'
                 recipient_list = [fs.bidder]
 
                 # envie o e-mail usando o módulo send_mail do Django
@@ -250,7 +250,7 @@ def bid(request, listingid):
                     # Construa a mensagem de e-mail para o último licitante
                     subject = f'Alguém cobriu seu lance para {listing.productnames}'
                     message = f'Alguém cobriu seu lance paro o {listing.productnames}, Patrimônio/IDP {listing.patrimonio}/{listing.idp}. \nNovo lance: R$ {fs.bidprice}. \n\nFique de olho!🕵️🕵️🕵️\n\n\n\n\n\n'##\nLeilão encerra em {listing.} às {listing.endtime} \nBoa sorte! \nEquipe Soulisto.\n\n\n\n\n'
-                    from_email = 'servicedesk@soulisto.com.br'
+                    from_email = 'ofertaslisto@soulisto.com.br'
                     recipient_list = [previous_bidder_email]
 
                     # Envie o e-mail usando o módulo send_mail do Django
@@ -304,8 +304,8 @@ def closebid(request, listingid):
             if closebid.bidder != closebid.lister:
                 # construa a mensagem de e-mail
                 subject = f'Você ganhou o leilão para o {listing.productnames}!'
-                message = f'Parabéns! Você ganhou o leilão para o {listing.productnames} | Patrimônio/IDP {closebid.patrimonio}/{listing.idp}, por R$ {closebid.finalbid}.\n\n Para darmos andamento na sua aquisição, faremos o contrato de Compra e Venda e Recibo de Entrega. Para isso, pedimos que envie os dados a seguir: \n\n- Nome Completo:\n\n- Nº RG:\n\n- Nº CPF: \n\n- Nacionalidade: \n\n- Estado Civil:\n\n- Endereço: \n\n Por gentileza, envie os dados para edna.silva@soulisto.com.br, natanael.sousa@soulisto.com.br, entraremos em contato para orientar quanto ao pagamento e retirada. \n\n\nAguardamos você! \n\n\n\n\n' 
-                from_email = 'servicedesk@soulisto.com.br'
+                message = f'Parabéns! Você ganhou o leilão para o {listing.productnames} | Patrimônio/IDP {closebid.patrimonio}/{listing.idp}, por R$ {closebid.finalbid}.\n\n Para darmos andamento na sua aquisição, faremos o contrato de Compra e Venda e Recibo de Entrega. Para isso, pedimos que envie os dados a seguir: \n\n- Nome Completo:\n\n- Nº RG:\n\n- Nº CPF: \n\n- Nacionalidade: \n\n- Estado Civil:\n\n- Endereço: \n\n Por gentileza, envie os dados respondendo este email ou envie para ofertaslisto@soulisto.com.br. \nEntraremos em contato para orientar quanto ao pagamento e retirada. \n\n\nAguardamos você! \n\n\n\n\n' 
+                from_email = 'ofertaslisto@soulisto.com.br'
                 recipient_list = [bid.bidder]
 
                 # envie o e-mail usando o módulo send_mail do Django
@@ -533,8 +533,8 @@ def closeallbids(request):
             if closebid.bidder != closebid.lister:
                 # construa a mensagem de e-mail
                 subject = f'Você ganhou o leilão para o {listing.productnames}!'
-                message = f'Parabéns! Você ganhou o leilão para o {listing.productnames} | Patrimônio/IDP {closebid.patrimonio}/{listing.idp}, por R$ {closebid.finalbid}.\n\n Para darmos andamento na sua aquisição, faremos o contrato de Compra e Venda e Recibo de Entrega. Para isso, pedimos que envie os dados a seguir: \n\n- Nome Completo:\n\n- Nº RG:\n\n- Nº CPF: \n\n- Nacionalidade: \n\n- Estado Civil:\n\n- Endereço: \n\n Por gentileza, envie os dados para edna.silva@soulisto.com.br, natanael.sousa@soulisto.com.br, entraremos em contato para orientar quanto ao pagamento e retirada. \n\n\nAguardamos você! \n\n\n\n\n'
-                from_email = 'servicedesk@soulisto.com.br'
+                message = f'Parabéns! Você ganhou o leilão para o {listing.productnames} | Patrimônio/IDP {closebid.patrimonio}/{listing.idp}, por R$ {closebid.finalbid}.\n\n Para darmos andamento na sua aquisição, faremos o contrato de Compra e Venda e Recibo de Entrega. Para isso, pedimos que envie os dados a seguir: \n\n- Nome Completo:\n\n- Nº RG:\n\n- Nº CPF: \n\n- Nacionalidade: \n\n- Estado Civil:\n\n- Endereço: \n\n Por gentileza, envie os dados respondendo este email ou envie para ofertaslisto@soulisto.com.br. \nEntraremos em contato para orientar quanto ao pagamento e retirada. \n\n\nAguardamos você! \n\n\n\n\n' 
+                from_email = 'ofertaslisto@soulisto.com.br'
                 recipient_list = [bid.bidder]
 
                 # envie o e-mail usando o módulo send_mail do Django
