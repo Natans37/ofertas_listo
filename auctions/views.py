@@ -211,6 +211,12 @@ def bid(request, listingid):
     
     images = Listing.objects.get(id=listingid)
     images = images.images
+
+    patrimonio = Listing.objects.get(id=listingid)
+    patrimonio = patrimonio.patrimonio
+
+    idp = Listing.objects.get(id=listingid)
+    idp = idp.idp
         
     bidform = BiddingForm(request.POST or None)
     if request.user.username:
@@ -231,6 +237,8 @@ def bid(request, listingid):
                 fs.descriptions = descriptions
                 fs.startingbids = current
                 fs.images = images
+                fs.patrimonio = patrimonio
+                fs.idp = idp
                 fs.save()
                 
                  # construa a mensagem de e-mail
@@ -264,6 +272,8 @@ def bid(request, listingid):
                 fs.descriptions = descriptions
                 fs.startingbids = current
                 fs.images = images
+                fs.patrimonio = patrimonio
+                fs.idp = idp
                 fs.save() 
             response = redirect('listingpage', id=listingid)
             response.set_cookie(
@@ -295,6 +305,7 @@ def closebid(request, listingid):
         closebid.images3 = listing.images3
         closebid.category = listing.category
         closebid.patrimonio = listing.patrimonio
+        closebid.idp = listing.idp
         try:
             bid = Bidding.objects.get(
                 listingid=listingid, bidprice=listing.startingbids)
@@ -343,6 +354,7 @@ def closebid(request, listingid):
             closebid.productnames = listing.productnames
             closebid.images = listing.images
             closebid.category = listing.category
+            closebid.idp = listing.idp
             closebid.save()
             closebidlist = Closebid.objects.get(listingid=listingid)
         listing.delete()
@@ -522,6 +534,7 @@ def closeallbids(request):
             closebid.images3 = listing.images3
             closebid.category = listing.category
             closebid.patrimonio = listing.patrimonio
+            closebid.idp = listing.idp
             try:
                 bid = Bidding.objects.filter(listingid=listing.id).order_by('-bidprice')[0]
                 closebid.bidder = bid.bidder
@@ -565,6 +578,8 @@ def closeallbids(request):
                 closebid.productnames = listing.productnames
                 closebid.images = listing.images
                 closebid.category = listing.category
+                closebid.patrimonio = listing.patrimonio
+                closebid.idp = listing.idp
                 closebid.save()
                 closebidlist = Closebid.objects.get(listingid=listing.id)
             listing.delete()
