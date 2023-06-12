@@ -49,6 +49,8 @@ class Bidding(models.Model):
     descriptions = models.TextField(max_length=500)
     startingbids = models.DecimalField(max_digits=15, decimal_places=2)
     images = models.URLField(blank=True, null=True)
+    patrimonio = models.CharField(null=True, max_length=20)
+    idp = models.CharField(null=True, unique=True, max_length=100)
     def __str__(self):
         return f"{self.listingid}"
 
@@ -74,6 +76,7 @@ class Closebid(models.Model):
     category = models.CharField(max_length=50, blank=True, null=True)
     finalbid = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
     patrimonio = models.CharField(null=True, unique=False, max_length=20)
+    idp = models.CharField(null=True, unique=True, max_length=100)
 
     def __str__(self):
         return f"{self.listingid}"
