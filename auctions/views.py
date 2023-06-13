@@ -586,7 +586,7 @@ def closeallbids(request):
         
     return render(request, 'auctions/categories.html')
 
-
+#
 def password_reset(request):
     if request.method == 'POST':
         form = PasswordResetForm(request.POST)
