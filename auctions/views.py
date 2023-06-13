@@ -20,6 +20,10 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 import random
 import string
+import os
+import sendgrid
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail, Email, To, Content
 
 
 User = get_user_model()
@@ -247,8 +251,21 @@ def bid(request, listingid):
                 from_email = 'ofertaslisto@soulisto.com.br'
                 recipient_list = [fs.bidder]
 
-                # envie o e-mail usando o módulo send_mail do Django
-                send_mail(subject, message, from_email, recipient_list) 
+                # envie o e-mail
+                try:
+                    sg = sendgrid.SendGridAPIClient(api_key='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')
+                    mail = Mail(
+                    from_email=Email(from_email),
+                    to_emails=To(recipient_list),
+                    subject=subject,
+                    plain_text_content=message
+                    )
+                    response = sg.send(mail)
+                    print(response.status_code)
+                    print(response.body)
+                    print(response.headers)
+                except Exception as e:
+                    print('Erro ao enviar e-mail:', str(e))
 
                 # Obtenha o último lance anterior
                 previous_bid = Bidding.objects.filter(listingid=listingid).exclude(bidder=fs.bidder).order_by('-time').first()
@@ -261,8 +278,21 @@ def bid(request, listingid):
                     from_email = 'ofertaslisto@soulisto.com.br'
                     recipient_list = [previous_bidder_email]
 
-                    # Envie o e-mail usando o módulo send_mail do Django
-                    send_mail(subject, message, from_email, recipient_list) 
+                   # envie o e-mail
+                    try:
+                        sg = sendgrid.SendGridAPIClient(api_key='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')
+                        mail = Mail(
+                        from_email=Email(from_email),
+                        to_emails=To(recipient_list),
+                        subject=subject,
+                        plain_text_content=message
+                        )
+                        response = sg.send(mail)
+                        print(response.status_code)
+                        print(response.body)
+                        print(response.headers)
+                    except Exception as e:
+                        print('Erro ao enviar e-mail:', str(e))
 
             except:
                 fs = bidform.save(commit=False)
@@ -319,8 +349,21 @@ def closebid(request, listingid):
                 from_email = 'ofertaslisto@soulisto.com.br'
                 recipient_list = [bid.bidder]
 
-                # envie o e-mail usando o módulo send_mail do Django
-                send_mail(subject, message, from_email, recipient_list)
+                 # envie o e-mail
+                try:
+                    sg = sendgrid.SendGridAPIClient(api_key='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')
+                    mail = Mail(
+                    from_email=Email(from_email),
+                    to_emails=To(recipient_list),
+                    subject=subject,
+                    plain_text_content=message
+                    )
+                    response = sg.send(mail)
+                    print(response.status_code)
+                    print(response.body)
+                    print(response.headers)
+                except Exception as e:
+                    print('Erro ao enviar e-mail:', str(e))
             # bid.delete()
         except:
             closebid.bidder = listing.lister
@@ -501,15 +544,30 @@ def register(request):
                 "message": "Username already taken."
             })
 
-        # Send password to user's email
-        send_mail(
-            'Senha para autenticação',
-            f'Olá {username},\n\nSua senha é: {password}\n\nPor favor, mantenha segura e não compartilhe com ninguém.\n\n Leilão Listo\n\n\n\n\n',
-            settings.DEFAULT_FROM_EMAIL,
-            [email],
-            fail_silently=False,
-            html_message= f'Olá {username},<br> <br> Sua senha é: <strong> {password} </strong> <br> <br> Por favor, mantenha segura e não compartilhe com ninguém. <br> <br> Leilão Listo <br> <br> <br> <br> <br>'
-        )
+        # Construa os parâmetros do e-mail
+        subject = 'Senha para autenticação'
+        message = f'Olá {username},\n\nSua senha é: {password}\n\nPor favor, mantenha segura e não compartilhe com ninguém.\n\n Leilão Listo\n\n\n\n\n'
+        from_email = 'ofertaslisto@soulisto.com.br'
+        recipient_list = [email]
+        html_message = f'Olá {username},<br> <br> Sua senha é: <strong>{password}</strong> <br> <br> Por favor, mantenha segura e não compartilhe com ninguém. <br> <br> Leilão Listo <br> <br> <br> <br> <br>'
+
+            # Envie o e-mail usando o SendGrid
+        try:
+            sg = sendgrid.SendGridAPIClient(api_key='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')
+            mail = Mail(
+            from_email=Email(from_email),
+            to_emails=To(recipient_list),
+            subject=subject,
+            plain_text_content=message,
+            html_content=html_message
+            )
+            response = sg.send(mail)
+            print(response.status_code)
+            print(response.body)
+            print(response.headers)
+        except Exception as e:
+            print('Erro ao enviar e-mail:', str(e))
+
 
         return render(request, "auctions/password_reset_done.html")
     else:
@@ -550,8 +608,22 @@ def closeallbids(request):
                 from_email = 'ofertaslisto@soulisto.com.br'
                 recipient_list = [bid.bidder]
 
-                # envie o e-mail usando o módulo send_mail do Django
-                send_mail(subject, message, from_email, recipient_list)
+                # envie o e-mail
+                try:
+                    sg = sendgrid.SendGridAPIClient(api_key='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')
+                    mail = Mail(
+                    from_email=Email(from_email),
+                    to_emails=To(recipient_list),
+                    subject=subject,
+                    plain_text_content=message
+                    )
+                    response = sg.send(mail)
+                    print(response.status_code)
+                    print(response.body)
+                    print(response.headers)
+                except Exception as e:
+                    print('Erro ao enviar e-mail:', str(e))
+                
             try:
                 if Watchlist.objects.filter(listingid=listing.id):
                     watch = Watchlist.objects.filter(listingid=listing.id)
@@ -586,7 +658,7 @@ def closeallbids(request):
         
     return render(request, 'auctions/categories.html')
 
-#
+
 def password_reset(request):
     if request.method == 'POST':
         form = PasswordResetForm(request.POST)
@@ -658,14 +730,26 @@ def forgot_password(request):
             new_password = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
             user.set_password(new_password)
             user.save()
-            send_mail(
-            'Nova senha para o aplicativo',
-            'Sua nova senha é: <strong>' + new_password + '</strong>',
-            settings.DEFAULT_FROM_EMAIL,
-            [email],
-            fail_silently=False,
-            html_message='Sua nova senha é: <strong>' + new_password + '</strong> <br> <br> <br>'
+            # Construa os parâmetros do e-mail
+            subject = 'Nova senha para o aplicativo'
+            message = 'Sua nova senha é: <strong>' + new_password + '</strong>'
+            from_email = 'ofertaslisto@soulisto.com.br'
+            recipient_list = [email]
+            html_message = 'Sua nova senha é: <strong>' + new_password + '</strong> <br> <br> <br>'
+
+            # Envie o e-mail usando o SendGrid
+            sg = sendgrid.SendGridAPIClient(api_key='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')
+            mail = Mail(
+            from_email=Email(from_email),
+            to_emails=To(recipient_list),
+            subject=subject,
+            plain_text_content=message,
+            html_content=html_message
             )
+            response = sg.send(mail)
+            print(response.status_code)
+            print(response.body)
+            print(response.headers)
 
             return redirect('password_reset_done')
         except User.DoesNotExist:
