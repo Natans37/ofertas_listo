@@ -1,6 +1,8 @@
 from django.urls import path
 from django.conf.urls import url, include
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path("", views.index, name="index"),
@@ -27,4 +29,4 @@ urlpatterns = [
     path('change_password/', views.change_password, name='change_password'),
     path('forgot_password/', views.forgot_password, name='forgot_password'),
     path('password_reset_done/', views.password_reset_done, name='password_reset_done'),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
