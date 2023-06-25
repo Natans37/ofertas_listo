@@ -1,6 +1,7 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+{% load static %}
 <br><br><br>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
@@ -216,7 +217,8 @@ input[type=checkbox]:checked + .checkbox-custom:before {
   });
 </script>
 
-
+Duvidas de como registrar? Verifique o passo a passo
+<a href="{% static 'Como_acessar.pdf' %}">clicando aqui</a>.
                 
                 
             <p class="login-card-footer-text" style="margin-top: 25px;">Já tem uma conta? <a href="{% url 'login' %}">Logue aqui.</a></p>
