@@ -47,7 +47,7 @@
         </style>
         {% else %}
         <img class="img-fluid rounded mb-3 mb-md-0"
-          src="https://raw.githubusercontent.com/Natans37/e-commerce-website/254db792501b2711e2f183fbc5092b12d1eadac6/auctions/static/img/Post_para_Instagram_Promo%C3%A7%C3%A3o_de_Aparelhos_Neon__Post_para_Facebook__Paisagem____2_-removebg-preview.png"
+          src="https://raw.githubusercontent.com/Natans37/Ofertaslisto_media/main/img/Logo%20simples.png"
           style="width:80%;margin:50px;border:10px auto" alt="No-Image-Available">
         {% endif %}
         <br /><br /><br />
@@ -149,8 +149,11 @@
           <dt class="col-sm-4 mb-3 d-block text-muted">Categoria:</dt>
           <dd class="col-sm-8"> {{ object.category }} </dd>
           {% if user.username %}
-          <dt class="col-sm-4 mb-3 d-block text-muted">Patrimônio / Idp:</dt>
-          <dd class="col-sm-8"> {{ object.patrimonio }} / {{ object.idp }} </dd>
+          <dt class="col-sm-4 mb-3 d-block text-muted">Patrimônio </dt>
+          <dd class="col-sm-8"> {{ object.patrimonio }} </dd>
+
+          <dt class="col-sm-4 mb-3 d-block text-muted">N° Série:</dt>
+          <dd class="col-sm-8"> {{ object.idp }} </dd>
 
           <dt class="col-sm-4 mb-3 d-block text-muted">ID:</dt>
           <dd class="col-sm-8"> {{ object.id }} </dd>
@@ -208,7 +211,7 @@
           <script>
             function countdown() {
               var now = new Date();
-              var eventDate = new Date("2023-09-09T17:59:59"); // definir data de termino 
+              var eventDate = new Date("2023-06-23T17:59:59"); // definir data de termino 
               var currentTime = now.getTime();
               var eventTime = eventDate.getTime();
 
@@ -343,7 +346,7 @@
 
             }
 
-        }, 5 * 60 * 1000); // 5 minutos em milissegundos
+        }, 20 * 60 * 1000); // 5 minutos em milissegundos
 
     })();
 
