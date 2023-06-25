@@ -20,6 +20,47 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 import random
 import string
+import boto3
+from botocore.exceptions import ClientError
+
+
+def send_email(recipient_list, subject, message, html_message=None, region_name="us-east-1"):
+    client = boto3.client('ses', region_name=region_name)
+    charset = "UTF-8"
+    sender = "noreply@soulisto.com.br"
+        
+    destination = {
+        'ToAddresses': recipient_list,
+    }
+        
+    body = {
+        'Text': {
+            'Charset': charset,
+            'Data': message,
+        },
+        'Html': {
+            'Charset': charset,
+            'Data': html_message,
+        },
+    }
+        
+    email_message = {
+        'Subject': {
+            'Charset': charset,
+            'Data': subject,
+        },
+        'Body': body,
+    }
+        
+    try:
+        response = client.send_email(
+            Destination=destination,
+            Message=email_message,
+            Source=sender,
+        )
+        return response['MessageId']
+    except Exception as e:
+        print("Email sending failed: ", str(e))
 
 
 User = get_user_model()
@@ -211,6 +252,12 @@ def bid(request, listingid):
     
     images = Listing.objects.get(id=listingid)
     images = images.images
+
+    patrimonio = Listing.objects.get(id=listingid)
+    patrimonio = patrimonio.patrimonio
+
+    idp = Listing.objects.get(id=listingid)
+    idp = idp.idp
         
     bidform = BiddingForm(request.POST or None)
     if request.user.username:
@@ -231,30 +278,31 @@ def bid(request, listingid):
                 fs.descriptions = descriptions
                 fs.startingbids = current
                 fs.images = images
+                fs.patrimonio = patrimonio
+                fs.idp = idp
                 fs.save()
                 
-                 # construa a mensagem de e-mail
-                subject = f'Você deu um lance para o produto {listing.productnames}!'
-                message = f'Você deu um lance para o {listing.productnames}. \nNo valor de R$ {fs.bidprice} \nPatrimônio/IDP {listing.patrimonio}/{listing.idp} \n\n\nAgora é só acompanhar e aguardar a contagem regressiva! \n\nBoa sorte! \n\n\n\n\n\n'
-                from_email = 'servicedesk@soulisto.com.br'
-                recipient_list = [fs.bidder]
-
-                # envie o e-mail usando o módulo send_mail do Django
-                send_mail(subject, message, from_email, recipient_list) 
+                # construa a mensagem de e-mail para o licitante
+                RECIPIENT = fs.bidder
+                SUBJECT = f'Você deu um lance para o produto {listing.productnames}!'
+                BODY_TEXT = f'Você deu um lance para o {listing.productnames}. \nNo valor de R$ {fs.bidprice} \nPatrimônio: {listing.patrimonio} | N°série: {listing.idp} \n\n\nAgora é só acompanhar e aguardar a contagem regressiva! \n\nBoa sorte! \n\n\n\n\n\n'
+                BODY_HTML = f'Você deu um lance para o <strong>{listing.productnames}</strong>. <br>No valor de <strong>R$ {fs.bidprice}</strong> <strong><br>Patrimônio: {listing.patrimonio} </strong> | <strong>N°série: {listing.idp} </strong> <br><br><br>Agora é só acompanhar e aguardar a contagem regressiva! <br><br>Boa sorte!<br><br><br><br><br>'
+            
+                # Chame a função send_email para enviar o e-mail
+                send_email([RECIPIENT], SUBJECT, BODY_TEXT, BODY_HTML)
 
                 # Obtenha o último lance anterior
                 previous_bid = Bidding.objects.filter(listingid=listingid).exclude(bidder=fs.bidder).order_by('-time').first()
                 if previous_bid:
                     previous_bidder_email = previous_bid.bidder
 
-                    # Construa a mensagem de e-mail para o último licitante
-                    subject = f'Alguém cobriu seu lance para {listing.productnames}'
-                    message = f'Alguém cobriu seu lance paro o {listing.productnames}, Patrimônio/IDP {listing.patrimonio}/{listing.idp}. \nNovo lance: R$ {fs.bidprice}. \n\nFique de olho!🕵️🕵️🕵️\n\n\n\n\n\n'##\nLeilão encerra em {listing.} às {listing.endtime} \nBoa sorte! \nEquipe Soulisto.\n\n\n\n\n'
-                    from_email = 'servicedesk@soulisto.com.br'
-                    recipient_list = [previous_bidder_email]
-
-                    # Envie o e-mail usando o módulo send_mail do Django
-                    send_mail(subject, message, from_email, recipient_list) 
+                # construa a mensagem de e-mail para o licitante anterior      
+                RECIPIENT = previous_bidder_email
+                SUBJECT = f'Alguém cobriu seu lance para {listing.productnames}'
+                BODY_TEXT = f'Alguém cobriu seu lance paro o {listing.productnames}, Patrimônio: {listing.patrimonio} | N°série: {listing.idp}. \nNovo lance: R$ {fs.bidprice}. \n\nFique de olho!🕵️🕵️🕵️\n\n\n\n\n\n'
+                BODY_HTML = f'Alguém cobriu seu lance paro o <strong> {listing.productnames}</strong>, <strong>Patrimônio: {listing.patrimonio}</strong> | <strong>N°série: {listing.idp}</strong>. <br>Novo lance: R$ {fs.bidprice}. <br><br>Fique de olho!🕵️🕵️🕵️<br><br><br><br><br>'
+                # Chame a função send_email para enviar o e-mail
+                send_email([RECIPIENT], SUBJECT, BODY_TEXT, BODY_HTML)
 
             except:
                 fs = bidform.save(commit=False)
@@ -264,6 +312,8 @@ def bid(request, listingid):
                 fs.descriptions = descriptions
                 fs.startingbids = current
                 fs.images = images
+                fs.patrimonio = patrimonio
+                fs.idp = idp
                 fs.save() 
             response = redirect('listingpage', id=listingid)
             response.set_cookie(
@@ -295,26 +345,42 @@ def closebid(request, listingid):
         closebid.images3 = listing.images3
         closebid.category = listing.category
         closebid.patrimonio = listing.patrimonio
+        closebid.idp = listing.idp
         try:
             bid = Bidding.objects.get(
-                listingid=listingid, bidprice=listing.startingbids)
+            listingid=listingid, bidprice=listing.startingbids)
             closebid.bidder = bid.bidder
             closebid.finalbid = bid.bidprice
             closebid.save()
             if closebid.bidder != closebid.lister:
+                
                 # construa a mensagem de e-mail
-                subject = f'Você ganhou o leilão para o {listing.productnames}!'
-                message = f'Parabéns! Você ganhou o leilão para o {listing.productnames} | Patrimônio/IDP {closebid.patrimonio}/{listing.idp}, por R$ {closebid.finalbid}.\n\n Para darmos andamento na sua aquisição, faremos o contrato de Compra e Venda e Recibo de Entrega. Para isso, pedimos que envie os dados a seguir: \n\n- Nome Completo:\n\n- Nº RG:\n\n- Nº CPF: \n\n- Nacionalidade: \n\n- Estado Civil:\n\n- Endereço: \n\n Por gentileza, envie os dados para edna.silva@soulisto.com.br, natanael.sousa@soulisto.com.br, entraremos em contato para orientar quanto ao pagamento e retirada. \n\n\nAguardamos você! \n\n\n\n\n' 
-                from_email = 'servicedesk@soulisto.com.br'
-                recipient_list = [bid.bidder]
-
-                # envie o e-mail usando o módulo send_mail do Django
-                send_mail(subject, message, from_email, recipient_list)
+                RECIPIENT = bid.bidder
+                SUBJECT = f'Você ganhou o leilão para o {listing.productnames}!'
+                BODY_TEXT = f'Parabéns! Você ganhou o leilão para o {listing.productnames}. | Patrimônio: {closebid.patrimonio} | N°série: {listing.idp}, por R$ {closebid.finalbid}.\n\n Para darmos andamento na sua aquisição, faremos o contrato de Compra e Venda e Recibo de Entrega. Para isso, pedimos que envie os dados a seguir: \n\n- Nome Completo:\n\n- Nº RG:\n\n- Nº CPF: \n\n- Nacionalidade: \n\n- Estado Civil:\n\n- Endereço: \n\n Por gentileza, envie os dados respondendo este email ou envie para ofertaslisto@soulisto.com.br. \nEntraremos em contato para orientar quanto ao pagamento e retirada. \n\n\nAguardamos você! \n\n\n\n\n' 
+                BODY_HTML = f'Parabéns! Você ganhou o leilão para o <strong>{listing.productnames}</strong>. | <strong>Patrimônio: {closebid.patrimonio}</strong> | <strong>N°série: {listing.idp}</strong>, por <strong>R$ {closebid.finalbid}</strong>.<br><br> Para darmos andamento na sua aquisição, faremos o contrato de Compra e Venda e Recibo de Entrega. Para isso, pedimos que envie os dados a seguir: <br><br>- <strong>Nome Completo:</strong><br><br>- <strong>Nº RG:</strong><br><br>- <strong>Nº CPF:</strong> <br><br>- <strong>Nacionalidade:</strong> <br><br>- <strong>Estado Civil:</strong><br><br>- <strong>Endereço:</strong> <br><br> Por gentileza, envie os dados  para <strong>ofertaslisto@soulisto.com.br</strong>. <br>Entraremos em contato para orientar quanto ao pagamento e retirada. <br><br><br>Aguardamos você! <br><br><br><br><br>'
+            
+                # Chame a função send_email para enviar o e-mail
+                send_email([RECIPIENT], SUBJECT, BODY_TEXT, BODY_HTML)
+                
             # bid.delete()
         except:
-            closebid.bidder = listing.lister
+            closebid.bidder = bid.bidder
             closebid.finalbid = listing.startingbids
             closebid.save()
+                
+            # construa a mensagem de e-mail
+            RECIPIENT = bid.bidder
+            SUBJECT = f'Você ganhou o leilão para o {listing.productnames}!'
+            BODY_TEXT = f'Parabéns! Você ganhou o leilão para o {listing.productnames}. | Patrimônio: {closebid.patrimonio} | N°série: {listing.idp}, por R$ {closebid.finalbid}.\n\n Para darmos andamento na sua aquisição, faremos o contrato de Compra e Venda e Recibo de Entrega. Para isso, pedimos que envie os dados a seguir: \n\n- Nome Completo:\n\n- Nº RG:\n\n- Nº CPF: \n\n- Nacionalidade: \n\n- Estado Civil:\n\n- Endereço: \n\n Por gentileza, envie os dados respondendo este email ou envie para ofertaslisto@soulisto.com.br. \nEntraremos em contato para orientar quanto ao pagamento e retirada. \n\n\nAguardamos você! \n\n\n\n\n' 
+            BODY_HTML = f'Parabéns! Você ganhou o leilão para o <strong>{listing.productnames}</strong>. | <strong>Patrimônio: {closebid.patrimonio}</strong> | <strong>N°série: {listing.idp}</strong>, por <strong>R$ {closebid.finalbid}</strong>.<br><br> Para darmos andamento na sua aquisição, faremos o contrato de Compra e Venda e Recibo de Entrega. Para isso, pedimos que envie os dados a seguir: <br><br>- <strong>Nome Completo:</strong><br><br>- <strong>Nº RG:</strong><br><br>- <strong>Nº CPF:</strong> <br><br>- <strong>Nacionalidade:</strong> <br><br>- <strong>Estado Civil:</strong><br><br>- <strong>Endereço:</strong> <br><br> Por gentileza, envie os dados  para <strong>ofertaslisto@soulisto.com.br</strong>. <br>Entraremos em contato para orientar quanto ao pagamento e retirada. <br><br><br>Aguardamos você! <br><br><br><br><br>'
+            send_email([RECIPIENT], SUBJECT, BODY_TEXT, BODY_HTML)        
+        else:
+            closebid.bidder = closebid.lister
+            closebid.finalbid = listing.startingbids
+            closebid.save()    
+            # Chame a função send_email para enviar o e-mail
+            
         try:
             if Watchlist.objects.filter(listingid=listingid):
                 watch = Watchlist.objects.filter(listingid=listingid)
@@ -343,6 +409,7 @@ def closebid(request, listingid):
             closebid.productnames = listing.productnames
             closebid.images = listing.images
             closebid.category = listing.category
+            closebid.idp = listing.idp
             closebid.save()
             closebidlist = Closebid.objects.get(listingid=listingid)
         listing.delete()
@@ -489,15 +556,22 @@ def register(request):
                 "message": "Username already taken."
             })
 
-        # Send password to user's email
-        send_mail(
-            'Senha para autenticação',
-            f'Olá {username},\n\nSua senha é: {password}\n\nPor favor, mantenha segura e não compartilhe com ninguém.\n\n Leilão Listo\n\n\n\n\n',
-            settings.DEFAULT_FROM_EMAIL,
-            [email],
-            fail_silently=False,
-            html_message= f'Olá {username},<br> <br> Sua senha é: <strong> {password} </strong> <br> <br> Por favor, mantenha segura e não compartilhe com ninguém. <br> <br> Leilão Listo <br> <br> <br> <br> <br>'
-        )
+        # Construa os parâmetros do e-mail
+        subject = 'Senha para autenticação'
+        message = f'Olá {username},\n\nSua senha é: {password}\n\nPor favor, mantenha segura e não compartilhe com ninguém.\n\n Leilão Listo\n\n\n\n\n'
+        from_email = 'ofertaslisto@soulisto.com.br'
+        recipient_list = [email]
+        html_message = f'Olá {username},<br> <br> Sua senha é: <strong>{password}</strong> <br> <br> Por favor, mantenha segura e não compartilhe com ninguém. <br> <br> Leilão Listo <br> <br> <br> <br> <br>'
+
+        # construa a mensagem de e-mail para o licitante
+        RECIPIENT = email
+        SUBJECT = 'Senha para autenticação'
+        BODY_TEXT = f'Olá {username},\n\nSua senha é: {password}\n\nPor favor, mantenha segura e não compartilhe com ninguém.\n\n Leilão Listo\n\n\n\n\n'
+        BODY_HTML = f'Olá <strong>{username}</strong>,<br><br>Sua senha é: <strong>{password}</strong><br><br>Por favor, mantenha segura e não compartilhe com ninguém.<br><br> Ofertas Listo<br><br><br><br>' 
+            
+        # Chame a função send_email para enviar o e-mail
+        send_email([RECIPIENT], SUBJECT, BODY_TEXT, BODY_HTML)
+
 
         return render(request, "auctions/password_reset_done.html")
     else:
@@ -522,6 +596,7 @@ def closeallbids(request):
             closebid.images3 = listing.images3
             closebid.category = listing.category
             closebid.patrimonio = listing.patrimonio
+            closebid.idp = listing.idp
             try:
                 bid = Bidding.objects.filter(listingid=listing.id).order_by('-bidprice')[0]
                 closebid.bidder = bid.bidder
@@ -531,14 +606,16 @@ def closeallbids(request):
                 closebid.finalbid = listing.startingbids
             closebid.save()
             if closebid.bidder != closebid.lister:
+                
                 # construa a mensagem de e-mail
-                subject = f'Você ganhou o leilão para o {listing.productnames}!'
-                message = f'Parabéns! Você ganhou o leilão para o {listing.productnames} | Patrimônio/IDP {closebid.patrimonio}/{listing.idp}, por R$ {closebid.finalbid}.\n\n Para darmos andamento na sua aquisição, faremos o contrato de Compra e Venda e Recibo de Entrega. Para isso, pedimos que envie os dados a seguir: \n\n- Nome Completo:\n\n- Nº RG:\n\n- Nº CPF: \n\n- Nacionalidade: \n\n- Estado Civil:\n\n- Endereço: \n\n Por gentileza, envie os dados para edna.silva@soulisto.com.br, natanael.sousa@soulisto.com.br, entraremos em contato para orientar quanto ao pagamento e retirada. \n\n\nAguardamos você! \n\n\n\n\n'
-                from_email = 'servicedesk@soulisto.com.br'
-                recipient_list = [bid.bidder]
-
-                # envie o e-mail usando o módulo send_mail do Django
-                send_mail(subject, message, from_email, recipient_list)
+                RECIPIENT = bid.bidder
+                SUBJECT = f'Você ganhou o leilão para o {listing.productnames}!'
+                BODY_TEXT = f'Parabéns! Você ganhou o leilão para o {listing.productnames}. | Patrimônio: {closebid.patrimonio} | N°série: {listing.idp}, por R$ {closebid.finalbid}.\n\n Para darmos andamento na sua aquisição, faremos o contrato de Compra e Venda e Recibo de Entrega. Para isso, pedimos que envie os dados a seguir: \n\n- Nome Completo:\n\n- Nº RG:\n\n- Nº CPF: \n\n- Nacionalidade: \n\n- Estado Civil:\n\n- Endereço: \n\n Por gentileza, envie os dados respondendo este email ou envie para ofertaslisto@soulisto.com.br. \nEntraremos em contato para orientar quanto ao pagamento e retirada. \n\n\nAguardamos você! \n\n\n\n\n' 
+                BODY_HTML = f'Parabéns! Você ganhou o leilão para o <strong>{listing.productnames}</strong>. | <strong>Patrimônio: {closebid.patrimonio}</strong> | <strong>N°série: {listing.idp}</strong>, por <strong>R$ {closebid.finalbid}</strong>.<br><br> Para darmos andamento na sua aquisição, faremos o contrato de Compra e Venda e Recibo de Entrega. Para isso, pedimos que envie os dados a seguir: <br><br>- <strong>Nome Completo:</strong><br><br>- <strong>Nº RG:</strong><br><br>- <strong>Nº CPF:</strong> <br><br>- <strong>Nacionalidade:</strong> <br><br>- <strong>Estado Civil:</strong><br><br>- <strong>Endereço:</strong> <br><br> Por gentileza, envie os dados  para <strong>ofertaslisto@soulisto.com.br</strong>. <br>Entraremos em contato para orientar quanto ao pagamento e retirada. <br><br><br>Aguardamos você! <br><br><br><br><br>' 
+            
+                # Chame a função send_email para enviar o e-mail
+                send_email([RECIPIENT], SUBJECT, BODY_TEXT, BODY_HTML)
+                
             try:
                 if Watchlist.objects.filter(listingid=listing.id):
                     watch = Watchlist.objects.filter(listingid=listing.id)
@@ -565,6 +642,8 @@ def closeallbids(request):
                 closebid.productnames = listing.productnames
                 closebid.images = listing.images
                 closebid.category = listing.category
+                closebid.patrimonio = listing.patrimonio
+                closebid.idp = listing.idp
                 closebid.save()
                 closebidlist = Closebid.objects.get(listingid=listing.id)
             listing.delete()
@@ -635,6 +714,7 @@ def change_password(request):
     return render(request, 'auctions/change_password.html', {'form': form})
 
 
+
 def forgot_password(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -643,14 +723,14 @@ def forgot_password(request):
             new_password = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
             user.set_password(new_password)
             user.save()
-            send_mail(
-            'Nova senha para o aplicativo',
-            'Sua nova senha é: <strong>' + new_password + '</strong>',
-            settings.DEFAULT_FROM_EMAIL,
-            [email],
-            fail_silently=False,
-            html_message='Sua nova senha é: <strong>' + new_password + '</strong> <br> <br> <br>'
-            )
+            
+            RECIPIENT = email
+            SUBJECT = 'Nova senha para o aplicativo'
+            BODY_TEXT = 'Sua nova senha é: ' + new_password
+            BODY_HTML = 'Sua nova senha é: <strong>' + new_password + '</strong> <br> <br> <br>'
+            
+            # Chame a função send_email para enviar o e-mail
+            send_email([RECIPIENT], SUBJECT, BODY_TEXT, BODY_HTML)          
 
             return redirect('password_reset_done')
         except User.DoesNotExist:
