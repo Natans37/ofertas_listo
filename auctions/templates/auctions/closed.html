@@ -35,14 +35,20 @@
             <h1 style="margin-bottom: 30px" >Detalhes de {{ object.productnames }}: </h1>
               <dl class="row">
 
+                {% if object.bidder == user.email %}
                   <dt class="col-sm-4 mb-3 d-block text-muted">Ganhador: </dt>
                   <dd class="col-sm-8"> {{ object.bidder }} </dd>
-                  
+                {% else %}
+                {% endif %} 
+
                   <dt class="col-sm-4 mb-3 d-block text-muted">Valor final:</dt>
                   <dd class="col-sm-8"> ${{ object.finalbid }} </dd>
 
                   <dt class="col-sm-4 mb-3 d-block text-muted">Patrimônio:</dt>
                   <dd class="col-sm-8"> {{ object.patrimonio }} </dd>
+
+                  <dt class="col-sm-4 mb-3 d-block text-muted">N° Série:</dt>
+                 <dd class="col-sm-8"> {{ object.idp }} </dd>
                   
                   <dd class="col-sm-8" style="margin-top: 5%"> <a href="{% url 'index' %}"> Verificar outros produtos </a> </dd>
               </dl>
